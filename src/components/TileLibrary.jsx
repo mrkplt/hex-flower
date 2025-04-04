@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useDrag } from 'react-dnd';
+import { ItemTypes } from '../constants';
 
 const LibraryContainer = styled.div`
   width: 250px;
@@ -27,6 +29,7 @@ const Tile = styled.div`
   height: 115.47px;
   position: relative;
   cursor: grab;
+  opacity: ${props => props.isDragging ? 0.5 : 1};
   
   &:before {
     content: '';
@@ -140,30 +143,45 @@ const CreateButton = styled.button`
   }
 `;
 
-const TileLibrary = ({ tiles, onCreateClick }) => {
-  const handleDragStart = (e, tile) => {
-    e.dataTransfer.setData('application/json', JSON.stringify(tile));
-  };
+const DraggableTile = ({ tile }) => {
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: ItemTypes.TILE,
+    item: () => {
+      // Create a new copy of the tile with a unique ID
+      return {
+        tile: {
+          ...tile,
+          id: crypto.randomUUID(), // Generate a new unique ID for each drag
+          originalId: tile.id, // Keep track of the original tile ID
+        }
+      };
+    },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  }));
 
+  return (
+    <Tile ref={drag} isDragging={isDragging}>
+      <TileContent>
+        {tile.image && (
+          <ImageContainer>
+            <TileImage src={tile.image} alt={tile.text || 'Tile image'} />
+          </ImageContainer>
+        )}
+        {tile.text && <TileText>{tile.text}</TileText>}
+      </TileContent>
+    </Tile>
+  );
+};
+
+const TileLibrary = ({ tiles, onCreateClick }) => {
   return (
     <LibraryContainer>
       <CreateButton onClick={onCreateClick} aria-label="Create New Tile" />
       <TileContainer>
         {tiles.map((tile) => (
-          <Tile
-            key={tile.id}
-            draggable
-            onDragStart={(e) => handleDragStart(e, tile)}
-          >
-            <TileContent>
-              {tile.image && (
-                <ImageContainer>
-                  <TileImage src={tile.image} alt={tile.text || 'Tile image'} />
-                </ImageContainer>
-              )}
-              {tile.text && <TileText>{tile.text}</TileText>}
-            </TileContent>
-          </Tile>
+          <DraggableTile key={tile.id} tile={tile} />
         ))}
       </TileContainer>
     </LibraryContainer>

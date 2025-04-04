@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useDrag, useDrop } from 'react-dnd';
+import { ItemTypes } from '../constants';
 
 const HexContainer = styled.div`
   width: 100px;
@@ -7,6 +9,7 @@ const HexContainer = styled.div`
   position: relative;
   margin: 10px;
   cursor: ${props => props.hasTile ? 'grab' : 'pointer'};
+  opacity: ${props => props.isDragging ? 0.5 : 1};
 
   &:active {
     cursor: ${props => props.hasTile ? 'grabbing' : 'pointer'};
@@ -19,9 +22,10 @@ const HexContainer = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
-    background: #f0f0f0;
+    background: ${props => props.isOver ? '#e0e0e0' : '#f0f0f0'};
     clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
     border: 2px solid #ddd;
+    transition: background-color 0.2s ease;
   }
 `;
 
@@ -96,34 +100,40 @@ const SideLabel = styled.div`
   }}
 `;
 
-const Hex = ({ tile, sideLabels = {}, onDrop, onDragOver, onDragStart, hexId }) => {
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    if (onDragOver) onDragOver(e);
-  };
+const Hex = ({ tile, sideLabels = {}, hexId, onMoveTile }) => {
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: ItemTypes.HEX,
+    item: { hexId, tile },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+    canDrag: !!tile,
+  }));
 
-  const handleDrop = (e) => {
-    e.preventDefault();
-    if (onDrop) onDrop(e);
-  };
+  const [{ isOver }, drop] = useDrop(() => ({
+    accept: [ItemTypes.HEX, ItemTypes.TILE],
+    drop: (item) => {
+      if (item.hexId !== hexId) {
+        // If the item is from the library (no hexId), use the tile directly
+        const tileToMove = item.hexId ? item.tile : item.tile;
+        onMoveTile(item.hexId || null, hexId, tileToMove);
+      }
+    },
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+    }),
+  }));
 
-  const handleDragStart = (e) => {
-    if (tile && onDragStart) {
-      e.dataTransfer.setData('application/json', JSON.stringify({
-        tile,
-        sourceHexId: hexId
-      }));
-      onDragStart(e);
-    }
+  const ref = (node) => {
+    drag(drop(node));
   };
 
   return (
     <HexContainer
-      onDragOver={handleDragOver}
-      onDrop={handleDrop}
-      draggable={!!tile}
-      onDragStart={handleDragStart}
+      ref={ref}
       hasTile={!!tile}
+      isDragging={isDragging}
+      isOver={isOver}
     >
       <Content>
         {tile && (

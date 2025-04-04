@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useDrop } from 'react-dnd';
+import { ItemTypes } from '../constants';
 import Hex from './Hex';
 
 const FlowerContainer = styled.div`
@@ -16,13 +18,14 @@ const HexRow = styled.div`
   }
 `;
 
-const DropZone = styled.div`
+const TrashZone = styled.div`
   position: fixed;
   bottom: 20px;
   right: 20px;
   width: 100px;
   height: 115.47px;
-  opacity: 0.5;
+  opacity: ${props => props.isOver ? 1 : 0.5};
+  transform: ${props => props.isOver ? 'scale(1.1)' : 'scale(1)'};
   transition: all 0.2s ease;
 
   &:before {
@@ -46,73 +49,53 @@ const DropZone = styled.div`
     font-size: 24px;
     z-index: 1;
   }
-
-  &.drag-over {
-    opacity: 1;
-    transform: scale(1.1);
-  }
 `;
 
 const HexFlower = ({ hexes, onHexDrop }) => {
-  // Hex flower layout pattern (19 hexes total):
-  // Row 1: 2 hexes
-  // Row 2: 3 hexes
-  // Row 3: 4 hexes
-  // Row 4: 3 hexes
-  // Row 5: 2 hexes
   const layout = [4, 5, 6, 7, 6, 5, 4];
-  const [isDraggingOver, setIsDraggingOver] = React.useState(false);
 
-  const handleDrop = (rowIndex, hexIndex) => (e) => {
-    e.preventDefault();
-    const data = JSON.parse(e.dataTransfer.getData('application/json'));
-    
-    // If the data has a sourceHexId, it's a reorder operation
-    if (data.sourceHexId) {
-      const targetHexId = `${rowIndex}-${hexIndex}`;
-      if (data.sourceHexId !== targetHexId) {
-        // Swap tiles between source and target
-        const sourceTile = hexes[data.sourceHexId]?.tile;
-        const targetTile = hexes[targetHexId]?.tile;
-        
-        onHexDrop(rowIndex, hexIndex, sourceTile);
-        
-        // If there was a tile in the target, move it to the source position
-        if (targetTile) {
-          const [sourceRow, sourceIndex] = data.sourceHexId.split('-');
-          onHexDrop(parseInt(sourceRow), parseInt(sourceIndex), targetTile);
-        } else {
-          // If target was empty, remove the tile from the source
-          const [sourceRow, sourceIndex] = data.sourceHexId.split('-');
-          onHexDrop(parseInt(sourceRow), parseInt(sourceIndex), null);
-        }
-      }
-    } else {
-      // Normal drop from library
-      onHexDrop(rowIndex, hexIndex, data);
+  const handleMoveTile = (sourceHexId, targetHexId, tile) => {
+    if (sourceHexId === targetHexId) return;
+
+    // If source is from library (no hexId), just add the tile
+    if (!sourceHexId) {
+      const [targetRow, targetIndex] = targetHexId.split('-');
+      onHexDrop(parseInt(targetRow), parseInt(targetIndex), tile);
+      return;
     }
-  };
 
-  const handleDropZoneDragOver = (e) => {
-    e.preventDefault();
-    setIsDraggingOver(true);
-  };
+    // Get source and target positions
+    const [sourceRow, sourceIndex] = sourceHexId.split('-');
+    const [targetRow, targetIndex] = targetHexId.split('-');
 
-  const handleDropZoneDragLeave = () => {
-    setIsDraggingOver(false);
-  };
+    // Get the tiles
+    const sourceTile = hexes[sourceHexId]?.tile;
+    const targetTile = hexes[targetHexId]?.tile;
 
-  const handleDropZoneDrop = (e) => {
-    e.preventDefault();
-    setIsDraggingOver(false);
-    const data = JSON.parse(e.dataTransfer.getData('application/json'));
-    
-    if (data.sourceHexId) {
-      // Remove tile from source hex
-      const [sourceRow, sourceIndex] = data.sourceHexId.split('-');
+    // Move source tile to target
+    onHexDrop(parseInt(targetRow), parseInt(targetIndex), sourceTile);
+
+    // If target had a tile, move it to source position
+    if (targetTile) {
+      onHexDrop(parseInt(sourceRow), parseInt(sourceIndex), targetTile);
+    } else {
+      // If target was empty, remove the tile from source
       onHexDrop(parseInt(sourceRow), parseInt(sourceIndex), null);
     }
   };
+
+  const [{ isOverTrash }, dropTrash] = useDrop(() => ({
+    accept: ItemTypes.HEX,
+    drop: (item) => {
+      if (item.hexId) {
+        const [row, index] = item.hexId.split('-');
+        onHexDrop(parseInt(row), parseInt(index), null);
+      }
+    },
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+    }),
+  }));
 
   return (
     <>
@@ -129,20 +112,14 @@ const HexFlower = ({ hexes, onHexDrop }) => {
                   hexId={hexId}
                   tile={hex.tile}
                   sideLabels={hex.sideLabels}
-                  onDrop={handleDrop(rowIndex, hexIndex)}
-                  onDragStart={() => {}}
+                  onMoveTile={handleMoveTile}
                 />
               );
             })}
           </HexRow>
         ))}
       </FlowerContainer>
-      <DropZone
-        className={isDraggingOver ? 'drag-over' : ''}
-        onDragOver={handleDropZoneDragOver}
-        onDragLeave={handleDropZoneDragLeave}
-        onDrop={handleDropZoneDrop}
-      />
+      <TrashZone ref={dropTrash} isOver={isOverTrash} />
     </>
   );
 };
