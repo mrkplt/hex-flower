@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useDrag } from 'react-dnd';
 import { ItemTypes } from '../constants';
+import TileForm from './TileForm';
 
 const LibraryContainer = styled.div`
   width: 250px;
@@ -119,7 +120,7 @@ const CreateButton = styled.button`
   }
 
   &:after {
-    content: '+';
+    content: '➕';
     position: absolute;
     top: 50%;
     left: 50%;
@@ -165,9 +166,38 @@ const DraggableTile = ({ tile }) => {
 };
 
 const TileLibrary = ({ tiles, onCreateClick }) => {
+  const [showForm, setShowForm] = React.useState(false);
+
+  const handleCreateTile = async (formData) => {
+    if (formData.imageFile) {
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        const newTile = {
+          id: crypto.randomUUID(),
+          image: event.target.result,
+          text: formData.imageName || ''
+        };
+        onCreateClick(newTile);
+      };
+      reader.readAsDataURL(formData.imageFile);
+    } else {
+      const newTile = {
+        id: crypto.randomUUID(),
+        text: formData.imageName
+      };
+      onCreateClick(newTile);
+    }
+  };
+
   return (
     <LibraryContainer>
-      <CreateButton onClick={onCreateClick} aria-label="Create New Tile" />
+      <CreateButton onClick={() => setShowForm(true)}>➕</CreateButton>
+      {showForm && (
+        <TileForm
+          onClose={() => setShowForm(false)}
+          onSubmit={handleCreateTile}
+        />
+      )}
       <TileContainer>
         {tiles.map((tile) => (
           <DraggableTile key={tile.id} tile={tile} />

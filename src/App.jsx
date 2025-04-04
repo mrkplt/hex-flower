@@ -22,26 +22,8 @@ const App = () => {
   const [tiles, setTiles] = React.useState([]);
   const [hexes, setHexes] = React.useState({});
 
-  const handleCreateTile = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*';
-    input.onchange = (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const newTile = {
-            id: uuidv4(),
-            image: event.target.result,
-            text: prompt('Enter text for the tile:') || ''
-          };
-          setTiles(prev => [...prev, newTile]);
-        };
-        reader.readAsDataURL(file);
-      }
-    };
-    input.click();
+  const handleCreateTile = (newTile) => {
+    setTiles(prev => [...prev, newTile]);
   };
 
   const handleHexDrop = (sourceHexId, targetHexId, tile) => {
@@ -109,7 +91,7 @@ const App = () => {
   return (
     <DndProvider backend={HTML5Backend}>
       <AppContainer>
-        <TileLibrary tiles={tiles} onCreateClick={handleCreateTile} />
+        <TileLibrary tiles={tiles} onCreateClick={(newTile) => handleCreateTile(newTile)} />
         <MainContent>
           <HexFlower hexes={hexes} onHexDrop={handleHexDrop} onTileDelete={handleTileDelete} />
         </MainContent>

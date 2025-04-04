@@ -7,8 +7,8 @@ const TrashZoneContainer = styled.div`
   position: fixed;
   bottom: 20px;
   right: 20px;
-  width: 100px;
-  height: 115.47px;
+  width: 150px;
+  height: 173.21px;
   opacity: ${props => props.isOver ? 1 : 0.5};
   transform: ${props => props.isOver ? 'scale(1.1)' : 'scale(1)'};
   transition: all 0.2s ease;
@@ -31,7 +31,7 @@ const TrashZoneContainer = styled.div`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 24px;
+    font-size: 36px;
     z-index: 1;
   }
 `;
