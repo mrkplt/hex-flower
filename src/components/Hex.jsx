@@ -3,10 +3,14 @@ import styled from 'styled-components';
 
 const HexContainer = styled.div`
   width: 100px;
-  height: 115.47px; // height = width * sqrt(3)/2
+  height: 115.47px;
   position: relative;
   margin: 10px;
-  cursor: pointer;
+  cursor: ${props => props.hasTile ? 'grab' : 'pointer'};
+
+  &:active {
+    cursor: ${props => props.hasTile ? 'grabbing' : 'pointer'};
+  }
 
   &:before {
     content: '';
@@ -30,6 +34,8 @@ const Content = styled.div`
   align-items: center;
   justify-content: center;
   z-index: 1;
+  overflow: hidden;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
 `;
 
 const Label = styled.div`
@@ -37,18 +43,39 @@ const Label = styled.div`
   text-align: center;
   word-wrap: break-word;
   max-width: 80%;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 2px 6px;
+  border-radius: 4px;
+`;
+
+const ImageContainer = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 `;
 
 const Image = styled.img`
-  max-width: 80%;
-  max-height: 60%;
-  object-fit: contain;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: cover;
+  object-position: center;
 `;
 
 const SideLabel = styled.div`
   position: absolute;
   font-size: 10px;
   color: #666;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 1px 4px;
+  border-radius: 2px;
   ${props => {
     switch (props.side) {
       case 'top':
@@ -69,7 +96,7 @@ const SideLabel = styled.div`
   }}
 `;
 
-const Hex = ({ tile, sideLabels = {}, onDrop, onDragOver }) => {
+const Hex = ({ tile, sideLabels = {}, onDrop, onDragOver, onDragStart, hexId }) => {
   const handleDragOver = (e) => {
     e.preventDefault();
     if (onDragOver) onDragOver(e);
@@ -80,15 +107,32 @@ const Hex = ({ tile, sideLabels = {}, onDrop, onDragOver }) => {
     if (onDrop) onDrop(e);
   };
 
+  const handleDragStart = (e) => {
+    if (tile && onDragStart) {
+      e.dataTransfer.setData('application/json', JSON.stringify({
+        tile,
+        sourceHexId: hexId
+      }));
+      onDragStart(e);
+    }
+  };
+
   return (
     <HexContainer
       onDragOver={handleDragOver}
       onDrop={handleDrop}
+      draggable={!!tile}
+      onDragStart={handleDragStart}
+      hasTile={!!tile}
     >
       <Content>
         {tile && (
           <>
-            {tile.image && <Image src={tile.image} alt={tile.text || 'Tile image'} />}
+            {tile.image && (
+              <ImageContainer>
+                <Image src={tile.image} alt={tile.text || 'Tile image'} />
+              </ImageContainer>
+            )}
             {tile.text && <Label>{tile.text}</Label>}
           </>
         )}
