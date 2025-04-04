@@ -113,21 +113,13 @@ const Hex = ({ tile, sideLabels = {}, hexId, onMoveTile }) => {
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
-    canDrag: () => !!tile,
-    end: (item, monitor) => {
-      const dropResult = monitor.getDropResult();
-      if (!dropResult) {
-        // If the tile wasn't dropped anywhere, return it to its original hex
-        onMoveTile(hexId, hexId, tile);
-      }
-    }
+    canDrag: () => !!tile
   });
 
   const [{ isOver }, drop] = useDrop({
     accept: [ItemTypes.HEX_TILE, ItemTypes.LIBRARY_TILE],
     drop: (item, monitor) => {
-      const didDrop = monitor.didDrop();
-      if (!didDrop && item.hexId !== hexId) {
+      if (item.hexId !== hexId) {
         onMoveTile(item.hexId || null, hexId, item.tile);
       }
     },
@@ -148,16 +140,12 @@ const Hex = ({ tile, sideLabels = {}, hexId, onMoveTile }) => {
       isOver={isOver}
     >
       <Content isOver={isOver}>
-        {tile && (
-          <>
-            {tile.image && (
-              <ImageContainer>
-                <Image src={tile.image} alt={tile.text || 'Tile image'} />
-              </ImageContainer>
-            )}
-            {tile.text && <Label>{tile.text}</Label>}
-          </>
+        {tile && tile.image && (
+          <ImageContainer>
+            <Image src={tile.image} alt={tile.text || 'Tile image'} />
+          </ImageContainer>
         )}
+        {tile && tile.text && <Label>{tile.text}</Label>}
       </Content>
       {Object.entries(sideLabels).map(([side, label]) => (
         <SideLabel key={side} side={side}>

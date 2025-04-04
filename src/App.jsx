@@ -93,12 +93,25 @@ const App = () => {
     });
   };
 
+  const handleTileDelete = (hexId) => {
+    setHexes(prev => {
+      const newHexes = { ...prev };
+      if (newHexes[hexId]) {
+        newHexes[hexId] = {
+          ...newHexes[hexId],
+          tile: null
+        };
+      }
+      return newHexes;
+    });
+  };
+
   return (
     <DndProvider backend={HTML5Backend}>
       <AppContainer>
         <TileLibrary tiles={tiles} onCreateClick={handleCreateTile} />
         <MainContent>
-          <HexFlower hexes={hexes} onHexDrop={handleHexDrop} />
+          <HexFlower hexes={hexes} onHexDrop={handleHexDrop} onTileDelete={handleTileDelete} />
         </MainContent>
       </AppContainer>
     </DndProvider>
