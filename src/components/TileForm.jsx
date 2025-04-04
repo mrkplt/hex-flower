@@ -173,8 +173,6 @@ const TileForm = ({ onClose, onSubmit }) => {
           <Input
             type="text"
             id="name"
-            value={imageName}
-            onChange={(e) => setImageName(e.target.value)}
             placeholder="Enter a name for the tile"
           />
         </InputGroup>
