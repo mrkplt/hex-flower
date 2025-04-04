@@ -146,16 +146,7 @@ const CreateButton = styled.button`
 const DraggableTile = ({ tile }) => {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemTypes.TILE,
-    item: () => {
-      // Create a new copy of the tile with a unique ID
-      return {
-        tile: {
-          ...tile,
-          id: crypto.randomUUID(), // Generate a new unique ID for each drag
-          originalId: tile.id, // Keep track of the original tile ID
-        }
-      };
-    },
+    item: { tile: { ...tile, id: crypto.randomUUID() } }, // Create a new instance of the tile
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),

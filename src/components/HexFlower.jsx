@@ -56,40 +56,14 @@ const HexFlower = ({ hexes, onHexDrop }) => {
 
   const handleMoveTile = (sourceHexId, targetHexId, tile) => {
     if (sourceHexId === targetHexId) return;
-
-    // If source is from library (no hexId), just add the tile
-    if (!sourceHexId) {
-      const [targetRow, targetIndex] = targetHexId.split('-');
-      onHexDrop(parseInt(targetRow), parseInt(targetIndex), tile);
-      return;
-    }
-
-    // Get source and target positions
-    const [sourceRow, sourceIndex] = sourceHexId.split('-');
-    const [targetRow, targetIndex] = targetHexId.split('-');
-
-    // Get the tiles
-    const sourceTile = hexes[sourceHexId]?.tile;
-    const targetTile = hexes[targetHexId]?.tile;
-
-    // Move source tile to target
-    onHexDrop(parseInt(targetRow), parseInt(targetIndex), sourceTile);
-
-    // If target had a tile, move it to source position
-    if (targetTile) {
-      onHexDrop(parseInt(sourceRow), parseInt(sourceIndex), targetTile);
-    } else {
-      // If target was empty, remove the tile from source
-      onHexDrop(parseInt(sourceRow), parseInt(sourceIndex), null);
-    }
+    onHexDrop(sourceHexId, targetHexId, tile);
   };
 
   const [{ isOverTrash }, dropTrash] = useDrop(() => ({
     accept: ItemTypes.HEX,
     drop: (item) => {
       if (item.hexId) {
-        const [row, index] = item.hexId.split('-');
-        onHexDrop(parseInt(row), parseInt(index), null);
+        onHexDrop(item.hexId, null, null); // Pass null as targetHexId to remove the tile
       }
     },
     collect: (monitor) => ({

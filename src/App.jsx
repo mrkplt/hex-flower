@@ -44,15 +44,34 @@ const App = () => {
     input.click();
   };
 
-  const handleHexDrop = (rowIndex, hexIndex, tile) => {
-    const hexId = `${rowIndex}-${hexIndex}`;
-    setHexes(prev => ({
-      ...prev,
-      [hexId]: {
-        ...prev[hexId],
-        tile: tile ? { ...tile } : null // Create a new copy of the tile
+  const handleHexDrop = (sourceHexId, targetHexId, tile) => {
+    setHexes(prev => {
+      const newHexes = { ...prev };
+
+      if (!sourceHexId) {
+        // New tile from library
+        newHexes[targetHexId] = {
+          ...newHexes[targetHexId],
+          tile: { ...tile }
+        };
+      } else {
+        // Swap tiles between hexes
+        const sourceTile = newHexes[sourceHexId]?.tile || null;
+        const targetTile = newHexes[targetHexId]?.tile || null;
+
+        newHexes[sourceHexId] = {
+          ...newHexes[sourceHexId],
+          tile: targetTile
+        };
+
+        newHexes[targetHexId] = {
+          ...newHexes[targetHexId],
+          tile: sourceTile
+        };
       }
-    }));
+
+      return newHexes;
+    });
   };
 
   return (

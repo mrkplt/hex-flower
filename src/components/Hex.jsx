@@ -22,10 +22,14 @@ const HexContainer = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
-    background: ${props => props.isOver ? '#e0e0e0' : '#f0f0f0'};
+    background: ${props => props.isOver ? (props.hasTile ? '#ffd700' : '#e0e0e0') : '#f0f0f0'};
     clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-    border: 2px solid #ddd;
-    transition: background-color 0.2s ease;
+    border: 2px solid ${props => props.isOver ? '#ffd700' : '#ddd'};
+    transition: all 0.2s ease;
+  }
+
+  &:hover:before {
+    box-shadow: ${props => props.hasTile ? '0 4px 8px rgba(0,0,0,0.1)' : 'none'};
   }
 `;
 
@@ -40,6 +44,8 @@ const Content = styled.div`
   z-index: 1;
   overflow: hidden;
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  transition: transform 0.2s ease;
+  transform: ${props => props.isOver ? 'scale(0.95)' : 'scale(1)'};
 `;
 
 const Label = styled.div`
@@ -114,9 +120,7 @@ const Hex = ({ tile, sideLabels = {}, hexId, onMoveTile }) => {
     accept: [ItemTypes.HEX, ItemTypes.TILE],
     drop: (item) => {
       if (item.hexId !== hexId) {
-        // If the item is from the library (no hexId), use the tile directly
-        const tileToMove = item.hexId ? item.tile : item.tile;
-        onMoveTile(item.hexId || null, hexId, tileToMove);
+        onMoveTile(item.hexId || null, hexId, item.tile);
       }
     },
     collect: (monitor) => ({
@@ -135,7 +139,7 @@ const Hex = ({ tile, sideLabels = {}, hexId, onMoveTile }) => {
       isDragging={isDragging}
       isOver={isOver}
     >
-      <Content>
+      <Content isOver={isOver}>
         {tile && (
           <>
             {tile.image && (
