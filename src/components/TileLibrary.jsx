@@ -145,8 +145,8 @@ const CreateButton = styled.button`
 
 const DraggableTile = ({ tile }) => {
   const [{ isDragging }, drag] = useDrag(() => ({
-    type: ItemTypes.TILE,
-    item: { tile: { ...tile, id: crypto.randomUUID() } }, // Create a new instance of the tile
+    type: ItemTypes.LIBRARY_TILE,
+    item: { tile },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -155,11 +155,9 @@ const DraggableTile = ({ tile }) => {
   return (
     <Tile ref={drag} isDragging={isDragging}>
       <TileContent>
-        {tile.image && (
-          <ImageContainer>
-            <TileImage src={tile.image} alt={tile.text || 'Tile image'} />
-          </ImageContainer>
-        )}
+        <ImageContainer>
+          <TileImage src={tile.image} alt={tile.text || 'Tile image'} />
+        </ImageContainer>
         {tile.text && <TileText>{tile.text}</TileText>}
       </TileContent>
     </Tile>

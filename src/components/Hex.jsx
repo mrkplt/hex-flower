@@ -107,26 +107,34 @@ const SideLabel = styled.div`
 `;
 
 const Hex = ({ tile, sideLabels = {}, hexId, onMoveTile }) => {
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type: ItemTypes.HEX,
-    item: { hexId, tile },
+  const [{ isDragging }, drag] = useDrag({
+    type: ItemTypes.HEX_TILE,
+    item: () => ({ hexId, tile }),
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
-    canDrag: !!tile,
-  }));
+    canDrag: () => !!tile,
+    end: (item, monitor) => {
+      const dropResult = monitor.getDropResult();
+      if (!dropResult) {
+        // If the tile wasn't dropped anywhere, return it to its original hex
+        onMoveTile(hexId, hexId, tile);
+      }
+    }
+  });
 
-  const [{ isOver }, drop] = useDrop(() => ({
-    accept: [ItemTypes.HEX, ItemTypes.TILE],
-    drop: (item) => {
-      if (item.hexId !== hexId) {
+  const [{ isOver }, drop] = useDrop({
+    accept: [ItemTypes.HEX_TILE, ItemTypes.LIBRARY_TILE],
+    drop: (item, monitor) => {
+      const didDrop = monitor.didDrop();
+      if (!didDrop && item.hexId !== hexId) {
         onMoveTile(item.hexId || null, hexId, item.tile);
       }
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
     }),
-  }));
+  });
 
   const ref = (node) => {
     drag(drop(node));

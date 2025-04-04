@@ -54,10 +54,29 @@ const App = () => {
           ...newHexes[targetHexId],
           tile: { ...tile }
         };
+      } else if (!newHexes[targetHexId]?.tile) {
+        // Moving tile to empty hex
+        const sourceTile = newHexes[sourceHexId]?.tile;
+        
+        if (!sourceTile) return prev; // Prevent moving non-existent tile
+
+        // Remove from source
+        newHexes[sourceHexId] = {
+          ...newHexes[sourceHexId]
+        };
+        delete newHexes[sourceHexId].tile;
+
+        // Place in target
+        newHexes[targetHexId] = {
+          ...newHexes[targetHexId],
+          tile: sourceTile
+        };
       } else {
-        // Swap tiles between hexes
-        const sourceTile = newHexes[sourceHexId]?.tile || null;
-        const targetTile = newHexes[targetHexId]?.tile || null;
+        // Swapping tiles between hexes
+        const sourceTile = newHexes[sourceHexId]?.tile;
+        const targetTile = newHexes[targetHexId]?.tile;
+
+        if (!sourceTile || !targetTile) return prev; // Prevent swapping with undefined tiles
 
         newHexes[sourceHexId] = {
           ...newHexes[sourceHexId],

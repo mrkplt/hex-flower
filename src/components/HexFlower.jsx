@@ -59,17 +59,18 @@ const HexFlower = ({ hexes, onHexDrop }) => {
     onHexDrop(sourceHexId, targetHexId, tile);
   };
 
-  const [{ isOverTrash }, dropTrash] = useDrop(() => ({
-    accept: ItemTypes.HEX,
-    drop: (item) => {
-      if (item.hexId) {
-        onHexDrop(item.hexId, null, null); // Pass null as targetHexId to remove the tile
+  const [{ isOverTrash }, dropTrash] = useDrop({
+    accept: ItemTypes.HEX_TILE,
+    drop: (item, monitor) => {
+      const didDrop = monitor.didDrop();
+      if (!didDrop && item.hexId) {
+        onHexDrop(item.hexId, null, null); // Remove tile from hex
       }
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
     }),
-  }));
+  });
 
   return (
     <>
