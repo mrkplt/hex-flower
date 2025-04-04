@@ -93,7 +93,6 @@ const TileText = styled.div`
   word-wrap: break-word;
   max-width: 80%;
   z-index: 2;
-  background: rgba(255, 255, 255, 0.8);
   padding: 2px 6px;
   border-radius: 4px;
 `;
@@ -174,9 +173,11 @@ const TileLibrary = ({ tiles, onCreateClick }) => {
       reader.onload = async (event) => {
         const newTile = {
           id: crypto.randomUUID(),
-          image: event.target.result,
-          text: formData.imageName || ''
+          image: event.target.result
         };
+        if (formData.imageName) {
+          newTile.text = formData.imageName;
+        }
         onCreateClick(newTile);
       };
       reader.readAsDataURL(formData.imageFile);

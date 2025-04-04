@@ -104,7 +104,6 @@ const TileForm = ({ onClose, onSubmit }) => {
     const files = event.dataTransfer.files;
     if (files && files[0]) {
       setImageFile(files[0]);
-      setImageName(files[0].name);
     }
   };
 
@@ -125,7 +124,6 @@ const TileForm = ({ onClose, onSubmit }) => {
     input.onchange = (e) => {
       if (e.target.files && e.target.files[0]) {
         setImageFile(e.target.files[0]);
-        setImageName(e.target.files[0].name);
       }
     };
     input.click();
@@ -133,10 +131,6 @@ const TileForm = ({ onClose, onSubmit }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (!imageFile && !imageName) {
-      alert('Please provide either an image or a name');
-      return;
-    }
     onSubmit({ imageFile, imageName });
     onClose();
   };
@@ -154,14 +148,11 @@ const TileForm = ({ onClose, onSubmit }) => {
             isDragging={isDragging}
           >
             {imageFile ? (
-              <>
-                <p>{imageFile.name}</p>
-                <img
-                  src={URL.createObjectURL(imageFile)}
-                  alt="Preview"
-                  style={{ maxWidth: '100%', maxHeight: '100px' }}
-                />
-              </>
+              <img
+                src={URL.createObjectURL(imageFile)}
+                alt="Preview"
+                style={{ maxWidth: '100%', maxHeight: '100px' }}
+              />
             ) : (
               <p>Drag and drop an image here, or click to select</p>
             )}
@@ -173,6 +164,8 @@ const TileForm = ({ onClose, onSubmit }) => {
           <Input
             type="text"
             id="name"
+            value={imageName}
+            onChange={(e) => setImageName(e.target.value)}
             placeholder="Enter a name for the tile"
           />
         </InputGroup>
