@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import { ItemTypes } from '../constants';
 import Hex from './Hex';
 import TrashZone from './TrashZone';
+import { getFlowerLayout, getHexDimensions } from '../constants/hexLayout';
+
+const { width, height, rowOffset, rowSpacing } = getHexDimensions();
 
 const FlowerContainer = styled.div`
   display: flex;
@@ -13,13 +16,12 @@ const FlowerContainer = styled.div`
 
 const HexRow = styled.div`
   display: flex;
-  &:nth-child(even) {
-    margin-left: 55px;
-  }
+  margin-bottom: ${rowSpacing}px;
+  transform: translateX(${props => props.offset}px);
 `;
 
 const HexFlower = ({ hexes, onHexDrop, onTileDelete }) => {
-  const layout = [4, 5, 6, 7, 6, 5, 4];
+  const layout = getFlowerLayout();
 
   const handleMoveTile = (sourceHexId, targetHexId, tile) => {
     if (sourceHexId === targetHexId) return;
@@ -30,7 +32,10 @@ const HexFlower = ({ hexes, onHexDrop, onTileDelete }) => {
     <>
       <FlowerContainer>
         {layout.map((hexCount, rowIndex) => (
-          <HexRow key={rowIndex}>
+          <HexRow
+            key={rowIndex}
+            offset={rowIndex % 2 === 1 ? rowOffset : 0}
+          >
             {Array.from({ length: hexCount }).map((_, hexIndex) => {
               const hexId = `${rowIndex}-${hexIndex}`;
               const hex = hexes[hexId] || {};

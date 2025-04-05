@@ -2,12 +2,16 @@ import React from 'react';
 import styled from 'styled-components';
 import { useDrag, useDrop } from 'react-dnd';
 import { ItemTypes } from '../constants';
+import { getHexSize, getHexMargin } from '../constants/hexLayout';
+
+const { width, height, contentWidth, contentHeight } = getHexSize();
+const margin = getHexMargin();
 
 const HexContainer = styled.div`
-  width: 100px;
-  height: 115.47px;
+  width: ${width}px;
+  height: ${height}px;
   position: relative;
-  margin: 10px;
+  margin: ${margin}px;
   cursor: ${props => props.hasTile ? 'grab' : 'pointer'};
   opacity: ${props => props.isDragging ? 0.5 : 1};
 
@@ -44,8 +48,6 @@ const Content = styled.div`
   z-index: 1;
   overflow: hidden;
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  transition: transform 0.2s ease;
-  transform: ${props => props.isOver ? 'scale(0.95)' : 'scale(1)'};
 `;
 
 const Label = styled.div`
@@ -89,17 +91,17 @@ const SideLabel = styled.div`
   ${props => {
     switch (props.side) {
       case 'top':
-        return 'top: 5px; left: 50%; transform: translateX(-50%);';
+        return `top: 0; left: 50%; transform: translateX(-50%);`;
       case 'topRight':
-        return 'top: 25%; right: 5px;';
+        return `top: 25%; right: 0;`;
       case 'bottomRight':
-        return 'bottom: 25%; right: 5px;';
+        return `bottom: 25%; right: 0;`;
       case 'bottom':
-        return 'bottom: 5px; left: 50%; transform: translateX(-50%);';
+        return `bottom: 0; left: 50%; transform: translateX(-50%);`;
       case 'bottomLeft':
-        return 'bottom: 25%; left: 5px;';
+        return `bottom: 25%; left: 0;`;
       case 'topLeft':
-        return 'top: 25%; left: 5px;';
+        return `top: 25%; left: 0;`;
       default:
         return '';
     }
@@ -139,7 +141,7 @@ const Hex = ({ tile, sideLabels = {}, hexId, onMoveTile }) => {
       isDragging={isDragging}
       isOver={isOver}
     >
-      <Content isOver={isOver}>
+      <Content>
         {tile && tile.image && (
           <ImageContainer>
             <Image src={tile.image} alt={tile.text || 'Tile image'} />
