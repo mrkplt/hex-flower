@@ -20,8 +20,31 @@ const HexRow = styled.div`
   transform: translateX(${props => props.offset}px);
 `;
 
-const HexFlower = ({ hexes, onHexDrop, onTileDelete }) => {
-  const layout = getFlowerLayout();
+const LayoutToggleContainer = styled.div`
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  gap: 10px;
+  z-index: 1000;
+`;
+
+const LayoutToggle = styled.button`
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background: ${props => props.isActive ? '#4CAF50' : '#f5f5f5'};
+  color: ${props => props.isActive ? 'white' : '#333'};
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${props => props.isActive ? '#4CAF50' : '#e0e0e0'};
+  }
+`;
+
+const HexFlower = ({ hexes, onHexDrop, onTileDelete, layoutSize }) => {
+  const layout = getFlowerLayout(layoutSize);
 
   const handleMoveTile = (sourceHexId, targetHexId, tile) => {
     if (sourceHexId === targetHexId) return;
@@ -54,6 +77,27 @@ const HexFlower = ({ hexes, onHexDrop, onTileDelete }) => {
         ))}
       </FlowerContainer>
       <TrashZone onTileDelete={onTileDelete} />
+      
+      <LayoutToggleContainer>
+        <LayoutToggle 
+          isActive={layoutSize === 'SMALL'}
+          onClick={() => onHexDrop(null, null, { type: 'layout', size: 'SMALL' })}
+        >
+          Small
+        </LayoutToggle>
+        <LayoutToggle 
+          isActive={layoutSize === 'MEDIUM'}
+          onClick={() => onHexDrop(null, null, { type: 'layout', size: 'MEDIUM' })}
+        >
+          Medium
+        </LayoutToggle>
+        <LayoutToggle 
+          isActive={layoutSize === 'LARGE'}
+          onClick={() => onHexDrop(null, null, { type: 'layout', size: 'LARGE' })}
+        >
+          Large
+        </LayoutToggle>
+      </LayoutToggleContainer>
     </>
   );
 };

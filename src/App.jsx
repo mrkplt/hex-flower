@@ -50,6 +50,7 @@ const FileInput = styled.input`
 const App = () => {
   const [tiles, setTiles] = React.useState([]);
   const [hexes, setHexes] = React.useState({});
+  const [layoutSize, setLayoutSize] = React.useState('MEDIUM');
   const [showToast, setShowToast] = React.useState(false);
   const [toastMessage, setToastMessage] = React.useState('');
 
@@ -58,6 +59,11 @@ const App = () => {
   };
 
   const handleHexDrop = (sourceHexId, targetHexId, tile) => {
+    if (tile?.type === 'layout') {
+      setLayoutSize(tile.size);
+      return;
+    }
+
     setHexes(prev => {
       const newHexes = { ...prev };
 
@@ -154,7 +160,8 @@ const App = () => {
 
       const saveData = {
         tiles: tilesWithBase64,
-        hexes
+        hexes,
+        layoutSize
       };
       
       // Create a blob from the JSON data
@@ -191,7 +198,7 @@ const App = () => {
 
     try {
       const text = await file.text();
-      const { tiles: savedTiles, hexes: savedHexes } = JSON.parse(text);
+      const { tiles: savedTiles, hexes: savedHexes, layoutSize: savedLayoutSize } = JSON.parse(text);
       
       // Validate the saved state
       if (!Array.isArray(savedTiles) || typeof savedHexes !== 'object') {
@@ -205,7 +212,8 @@ const App = () => {
       // Set the new state
       setTiles(savedTiles);
       setHexes(savedHexes);
-      
+      setLayoutSize(savedLayoutSize || 'MEDIUM');
+
       setToastMessage('State loaded successfully');
       setShowToast(true);
     } catch (error) {
@@ -233,7 +241,12 @@ const App = () => {
         </SaveLoadContainer>
         <TileLibrary tiles={tiles} onCreateClick={handleCreateTile} />
         <MainContent>
-          <HexFlower hexes={hexes} onHexDrop={handleHexDrop} onTileDelete={handleTileDelete} />
+          <HexFlower 
+            hexes={hexes}
+            onHexDrop={handleHexDrop}
+            onTileDelete={handleTileDelete}
+            layoutSize={layoutSize}
+          />
         </MainContent>
         {showToast && (
           <Toast message={toastMessage} onClose={() => setShowToast(false)} />

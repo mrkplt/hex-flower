@@ -68,10 +68,14 @@ const calculateOffsetPattern = (hexCount) => {
   return pattern;
 };
 
-export const getFlowerLayout = () => {
-  // Create a hexagonal flower pattern with rings of 3, 4, 5, 4, 3 hexagons
-  return [4 , 5, 6, 7, 6, 5, 4];
-  // return [3, 4, 5, 4, 3];
+export const LAYOUT_SIZES = {
+  SMALL: [2, 3, 2],
+  MEDIUM: [3, 4, 5, 4, 3],
+  LARGE: [4, 5, 6, 7, 6, 5, 4]
+};
+
+export const getFlowerLayout = (size = 'MEDIUM') => {
+  return LAYOUT_SIZES[size];
 };
 
 export const getHexOffset = (hexIndex, totalHexes) => {
