@@ -23,7 +23,7 @@ const HexRow = styled.div`
 const LayoutToggleContainer = styled.div`
   position: absolute;
   bottom: 20px;
-  left: 20px;
+  left: 270px;
   display: flex;
   gap: 10px;
   z-index: 1000;

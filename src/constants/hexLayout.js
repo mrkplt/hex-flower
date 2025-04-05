@@ -1,17 +1,17 @@
 // Hex dimensions and calculations
-export const HEX_WIDTH = 120; // Base width of the hexagon
+export const HEX_WIDTH = 110; // Base width of the hexagon
 export const HEX_STROKE = 2; // Border width
 
 // Calculated values
-export const HEX_HEIGHT = HEX_WIDTH * 1.1; // Height based on equilateral triangle properties
-export const HEX_MARGIN = HEX_WIDTH * 0.1; // 10% of hex width as margin
+export const HEX_HEIGHT = HEX_WIDTH * 1.15;
+export const HEX_MARGIN = HEX_WIDTH * 0.05; 
 
 // Content area calculations (subtracting stroke width)
 export const HEX_CONTENT_WIDTH = HEX_WIDTH - (HEX_STROKE * 2);
 export const HEX_CONTENT_HEIGHT = HEX_HEIGHT - (HEX_STROKE * 2);
 
 // Layout calculations
-export const ROW_SPACING = HEX_HEIGHT * -0.30; // Distance between rows
+export const ROW_SPACING = HEX_HEIGHT * -0.27; // Distance between rows
 export const ROW_OFFSET = HEX_WIDTH * -0.01; // Horizontal offset for even rows
 
 // Helper functions
