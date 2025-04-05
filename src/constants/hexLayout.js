@@ -1,5 +1,5 @@
 // Hex dimensions and calculations
-export const HEX_WIDTH = 100; // Base width of the hexagon
+export const HEX_WIDTH = 120; // Base width of the hexagon
 export const HEX_STROKE = 2; // Border width
 
 // Calculated values
@@ -28,9 +28,41 @@ export const getRowOffset = (isEvenRow) => {
 
 export const getHexMargin = () => HEX_MARGIN;
 
+export const HEX_OFFSET_CONFIG = {
+  baseOffset: 0.15,
+  pattern: [
+    { x: 0, y: 0 },
+    { x: 1, y: 0 },
+    { x: 1.5, y: -0.5 },
+    { x: 1, y: -1 },
+    { x: 0, y: -1 },
+    { x: -0.5, y: -0.5 }
+  ]
+};
+
 export const getFlowerLayout = () => {
-  // Return the fixed flower layout pattern
+  // Create a hexagonal flower pattern with rings of 3, 4, 5, 4, 3 hexagons
   return [3, 4, 5, 4, 3];
+};
+
+export const getHexOffset = (hexIndex, totalHexes) => {
+  const { baseOffset, pattern } = HEX_OFFSET_CONFIG;
+  
+  // Calculate the pattern index based on hex position
+  const patternIndex = Math.floor(hexIndex / (totalHexes / pattern.length)) % pattern.length;
+  const { x, y } = pattern[patternIndex];
+  
+  // Calculate the actual offset values
+  const offsetX = HEX_WIDTH * (baseOffset * x);
+  const offsetY = HEX_HEIGHT * (baseOffset * y);
+  
+  // Invert the offset for alternating rows
+  const isInvertedRow = Math.floor(hexIndex / totalHexes) % 2 === 1;
+  
+  return {
+    x: isInvertedRow ? -offsetX : offsetX,
+    y: isInvertedRow ? -offsetY : offsetY
+  };
 };
 
 export const updateHexDimensions = (newWidth) => {
