@@ -28,40 +28,85 @@ export const getRowOffset = (isEvenRow) => {
 
 export const getHexMargin = () => HEX_MARGIN;
 
-export const HEX_OFFSET_CONFIG = {
-  baseOffset: 0.15,
-  pattern: [
-    { x: 0, y: 0 },
-    { x: 1, y: 0 },
-    { x: 1.5, y: -0.5 },
-    { x: 1, y: -1 },
-    { x: 0, y: -1 },
-    { x: -0.5, y: -0.5 }
-  ]
+// Helper function to calculate the offset pattern for a given number of hexagons
+const calculateOffsetPattern = (hexCount) => {
+  const pattern = [{ x: 0, y: 0 }]; // Start with center hex
+  
+  // Calculate the number of hexagons in each direction
+  const halfCount = Math.floor(hexCount / 2);
+  
+  // Add right side hexes
+  for (let i = 1; i <= halfCount; i++) {
+    pattern.push({ x: i, y: 0 });
+  }
+  
+  // Add top-right hexes
+  for (let i = 1; i <= halfCount; i++) {
+    pattern.push({ x: i, y: -i });
+  }
+  
+  // Add top-left hexes
+  for (let i = 1; i <= halfCount; i++) {
+    pattern.push({ x: 0, y: -i });
+  }
+  
+  // Add left side hexes
+  for (let i = 1; i <= halfCount; i++) {
+    pattern.push({ x: -i, y: 0 });
+  }
+  
+  // Add bottom-left hexes
+  for (let i = 1; i <= halfCount; i++) {
+    pattern.push({ x: -i, y: i });
+  }
+  
+  // Add bottom-right hexes
+  for (let i = 1; i <= halfCount; i++) {
+    pattern.push({ x: 0, y: i });
+  }
+  
+  return pattern;
 };
 
 export const getFlowerLayout = () => {
   // Create a hexagonal flower pattern with rings of 3, 4, 5, 4, 3 hexagons
-  return [3, 4, 5, 4, 3];
+  return [4 , 5, 6, 7, 6, 5, 4];
+  // return [3, 4, 5, 4, 3];
 };
 
 export const getHexOffset = (hexIndex, totalHexes) => {
-  const { baseOffset, pattern } = HEX_OFFSET_CONFIG;
+  // Calculate which ring this hex belongs to
+  const layout = getFlowerLayout();
+  let currentCount = 0;
+  let ringIndex = 0;
   
-  // Calculate the pattern index based on hex position
-  const patternIndex = Math.floor(hexIndex / (totalHexes / pattern.length)) % pattern.length;
+  for (let i = 0; i < layout.length; i++) {
+    if (hexIndex < currentCount + layout[i]) {
+      ringIndex = i;
+      break;
+    }
+    currentCount += layout[i];
+  }
+  
+  // Calculate the offset pattern for this ring
+  const pattern = calculateOffsetPattern(layout[ringIndex]);
+  
+  // Calculate the pattern index based on the hex's position in its ring
+  const ringPosition = hexIndex - currentCount;
+  const patternIndex = ringPosition % pattern.length;
   const { x, y } = pattern[patternIndex];
   
   // Calculate the actual offset values
-  const offsetX = HEX_WIDTH * (baseOffset * x);
-  const offsetY = HEX_HEIGHT * (baseOffset * y);
+  const baseOffset = HEX_WIDTH * 0.15; // Base offset as percentage of hex width
+  const offsetX = baseOffset * x;
+  const offsetY = baseOffset * y;
   
-  // Invert the offset for alternating rows
-  const isInvertedRow = Math.floor(hexIndex / totalHexes) % 2 === 1;
+  // Apply additional offset based on ring index to create the flower pattern
+  const ringOffset = ringIndex * (HEX_WIDTH * 0.1);
   
   return {
-    x: isInvertedRow ? -offsetX : offsetX,
-    y: isInvertedRow ? -offsetY : offsetY
+    x: offsetX + (ringIndex % 2 === 1 ? -ringOffset : ringOffset),
+    y: offsetY + (ringIndex * HEX_HEIGHT * 0.2)
   };
 };
 
