@@ -106,6 +106,9 @@ const CreateButton = styled.button`
   height: ${HEX_HEIGHT}px;
   position: relative;
   cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
   
   &:before {
     content: '';
