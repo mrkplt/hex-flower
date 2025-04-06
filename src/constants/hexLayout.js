@@ -3,15 +3,15 @@ export const HEX_WIDTH = 110; // Base width of the hexagon
 export const HEX_STROKE = 2; // Border width
 
 // Calculated values
-export const HEX_HEIGHT = HEX_WIDTH * 1.15;
-export const HEX_MARGIN = HEX_WIDTH * 0.05; 
+export const HEX_HEIGHT = HEX_WIDTH * .9;
+export const HEX_MARGIN = HEX_WIDTH * 0.35; 
 
 // Content area calculations (subtracting stroke width)
 export const HEX_CONTENT_WIDTH = HEX_WIDTH - (HEX_STROKE * 2);
 export const HEX_CONTENT_HEIGHT = HEX_HEIGHT - (HEX_STROKE * 2);
 
 // Layout calculations
-export const ROW_SPACING = HEX_HEIGHT * -0.27; // Distance between rows
+export const ROW_SPACING = HEX_HEIGHT * -1.27; // Distance between rows
 export const ROW_OFFSET = HEX_WIDTH * -0.01; // Horizontal offset for even rows
 
 // Helper functions
@@ -69,9 +69,9 @@ const calculateOffsetPattern = (hexCount) => {
 };
 
 export const LAYOUT_SIZES = {
-  SMALL: [2, 3, 2],
-  MEDIUM: [3, 4, 5, 4, 3],
-  LARGE: [4, 5, 6, 7, 6, 5, 4]
+  SMALL: [1,2, 1, 2, 1],
+  MEDIUM: [1, 2, 3, 2, 3, 2, 3, 2, 1],
+  LARGE: [1, 2, 3, 4, 3, 4, 3, 4, 3, 4, 3, 2, 1]
 };
 
 export const getFlowerLayout = (size = 'MEDIUM') => {

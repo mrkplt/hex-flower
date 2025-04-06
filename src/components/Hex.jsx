@@ -27,7 +27,7 @@ const HexContainer = styled.div`
     width: 100%;
     height: 100%;
     background: ${props => props.isOver ? (props.hasTile ? '#ffd700' : '#e0e0e0') : '#f0f0f0'};
-    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
     border: 2px solid ${props => props.isOver ? '#ffd700' : '#ddd'};
     transition: all 0.2s ease;
   }
@@ -47,7 +47,7 @@ const Content = styled.div`
   justify-content: center;
   z-index: 1;
   overflow: hidden;
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
 `;
 
 const Label = styled.div`
