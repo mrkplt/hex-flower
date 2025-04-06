@@ -5,7 +5,7 @@ import { ItemTypes } from '../constants';
 import TileForm from './TileForm';
 
 const LibraryContainer = styled.div`
-  width: 250px;
+  width: 350px;
   height: 100%;
   background: #f5f5f5;
   padding: 20px;
@@ -19,10 +19,11 @@ const LibraryContainer = styled.div`
 const TileContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 35px;
   overflow-y: auto;
   padding: 10px;
   justify-content: center;
+  align-items: flex-start;
 `;
 
 const Tile = styled.div`
