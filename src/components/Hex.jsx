@@ -14,6 +14,7 @@ const HexContainer = styled.div`
   margin: ${margin}px;
   cursor: ${props => props.hasTile ? 'grab' : 'pointer'};
   opacity: ${props => props.isDragging ? 0.5 : 1};
+  transform: translate(${props => `${props.offset}px, ${props.verticalOffset}px`});
 
   &:active {
     cursor: ${props => props.hasTile ? 'grabbing' : 'pointer'};
@@ -35,6 +36,9 @@ const HexContainer = styled.div`
   &:hover:before {
     box-shadow: ${props => props.hasTile ? '0 4px 8px rgba(0,0,0,0.1)' : 'none'};
   }
+
+  // Ensure the container itself matches the hex shape
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
 `;
 
 const Content = styled.div`
@@ -108,7 +112,7 @@ const SideLabel = styled.div`
   }}
 `;
 
-const Hex = ({ tile, sideLabels = {}, hexId, onMoveTile }) => {
+const Hex = ({ tile, sideLabels = {}, hexId, onMoveTile, offset = 0, verticalOffset = 0 }) => {
   const [{ isDragging }, drag] = useDrag({
     type: ItemTypes.HEX_TILE,
     item: () => ({ hexId, tile }),
@@ -140,6 +144,8 @@ const Hex = ({ tile, sideLabels = {}, hexId, onMoveTile }) => {
       hasTile={!!tile}
       isDragging={isDragging}
       isOver={isOver}
+      offset={offset}
+      verticalOffset={verticalOffset}
     >
       <Content>
         {tile && tile.image && (

@@ -41,7 +41,7 @@ const Tile = styled.div`
     width: 100%;
     height: 100%;
     background: white;
-    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
     border: 2px solid #ddd;
     transition: box-shadow 0.2s ease;
   }
@@ -65,7 +65,7 @@ const TileContent = styled.div`
   justify-content: center;
   z-index: 1;
   overflow: hidden;
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
 `;
 
 const ImageContainer = styled.div`
@@ -102,9 +102,6 @@ const CreateButton = styled.button`
   width: 100px;
   height: 115.47px;
   position: relative;
-  background: none;
-  border: none;
-  padding: 0;
   cursor: pointer;
   
   &:before {
@@ -115,7 +112,7 @@ const CreateButton = styled.button`
     width: 100%;
     height: 100%;
     background: #4CAF50;
-    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
     transition: all 0.2s ease;
   }
 

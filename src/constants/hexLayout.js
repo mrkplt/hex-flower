@@ -11,8 +11,8 @@ export const HEX_CONTENT_WIDTH = HEX_WIDTH - (HEX_STROKE * 2);
 export const HEX_CONTENT_HEIGHT = HEX_HEIGHT - (HEX_STROKE * 2);
 
 // Layout calculations
-export const ROW_SPACING = HEX_HEIGHT * -1.27; // Distance between rows
-export const ROW_OFFSET = HEX_WIDTH * -0.01; // Horizontal offset for even rows
+export const ROW_SPACING = HEX_HEIGHT * -1.12; // Distance between rows
+export const ROW_OFFSET = HEX_WIDTH * 0.01; // Horizontal offset for even rows
 
 // Helper functions
 export const getHexSize = () => ({

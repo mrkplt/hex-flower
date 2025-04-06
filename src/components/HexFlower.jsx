@@ -17,7 +17,6 @@ const FlowerContainer = styled.div`
 const HexRow = styled.div`
   display: flex;
   margin-bottom: ${rowSpacing}px;
-  transform: translateX(${props => props.offset}px);
 `;
 
 const LayoutToggleContainer = styled.div`
@@ -45,6 +44,7 @@ const LayoutToggle = styled.button`
 
 const HexFlower = ({ hexes, onHexDrop, onTileDelete, layoutSize }) => {
   const layout = getFlowerLayout(layoutSize);
+  const { width, height, rowOffset, rowSpacing } = getHexDimensions();
 
   const handleMoveTile = (sourceHexId, targetHexId, tile) => {
     if (sourceHexId === targetHexId) return;
@@ -62,22 +62,26 @@ const HexFlower = ({ hexes, onHexDrop, onTileDelete, layoutSize }) => {
             {Array.from({ length: hexCount }).map((_, hexIndex) => {
               const hexId = `${rowIndex}-${hexIndex}`;
               const hex = hexes[hexId] || {};
-              
+              const tile = hex.tile;
+
               return (
                 <Hex
                   key={hexId}
                   hexId={hexId}
-                  tile={hex.tile}
+                  tile={tile}
                   sideLabels={hex.sideLabels}
                   onMoveTile={handleMoveTile}
+                  offset={rowIndex % 2 === 1 ? rowOffset : 0}
+                  verticalOffset={rowIndex * (height + rowSpacing)}
                 />
               );
             })}
           </HexRow>
         ))}
       </FlowerContainer>
+
       <TrashZone onTileDelete={onTileDelete} />
-      
+
       <LayoutToggleContainer>
         <LayoutToggle 
           isActive={layoutSize === 'SMALL'}
