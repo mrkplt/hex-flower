@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import { useDrag } from 'react-dnd';
 import { ItemTypes } from '../constants';
 import TileForm from './TileForm';
+import { getHexSize } from '../constants/hexLayout';
+
+const { width: HEX_WIDTH, height: HEX_HEIGHT } = getHexSize();
 
 const LibraryContainer = styled.div`
   width: 350px;
@@ -27,8 +30,8 @@ const TileContainer = styled.div`
 `;
 
 const Tile = styled.div`
-  width: 100px;
-  height: 115.47px;
+  width: ${HEX_WIDTH}px;
+  height: ${HEX_HEIGHT}px;
   position: relative;
   cursor: grab;
   opacity: ${props => props.isDragging ? 0.5 : 1};
@@ -99,8 +102,8 @@ const TileText = styled.div`
 `;
 
 const CreateButton = styled.button`
-  width: 100px;
-  height: 115.47px;
+  width: ${HEX_WIDTH}px;
+  height: ${HEX_HEIGHT}px;
   position: relative;
   cursor: pointer;
   
