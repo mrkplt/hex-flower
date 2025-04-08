@@ -26,23 +26,37 @@
     height: 100%;
     margin: 0;
     padding: 0;
+    max-width: 100%;
+    max-height: 100%;
+    overflow: visible;
+    max-width: 11in;
+    max-height: 8.5in;
+    transform: scale(0.9);
+    transform-origin: center;
   }
 
   /* Show hex rows */
   .hex-row {
     visibility: visible;
     display: flex;
-    margin-bottom: 0; /* Remove spacing for print */
+    margin-bottom: 0;
+    flex-wrap: nowrap;
+    overflow: visible;
+    margin-right: -40px;
   }
 
   /* Show hex containers */
   .hex-container {
     visibility: visible;
-    margin: 0; /* Remove spacing for print */
+    margin: 0;
     cursor: auto;
     opacity: 1;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+    transform: translate(0, 0) !important;
+    width: 88px !important;
+    height: 79.2px !important;
+    margin-top: -72px;
   }
 
   /* Ensure hex shapes are visible */
