@@ -52,12 +52,13 @@ const HexFlower = ({ hexes, onHexDrop, onTileDelete, layoutSize }) => {
   };
 
   return (
-    <>
-      <FlowerContainer>
+    <div className="hex-flower">
+      <FlowerContainer className="flower-container">
         {layout.map((hexCount, rowIndex) => (
           <HexRow
             key={rowIndex}
             offset={rowIndex % 2 === 1 ? rowOffset : 0}
+            className="hex-row"
           >
             {Array.from({ length: hexCount }).map((_, hexIndex) => {
               const hexId = `${rowIndex}-${hexIndex}`;
@@ -73,6 +74,7 @@ const HexFlower = ({ hexes, onHexDrop, onTileDelete, layoutSize }) => {
                   onMoveTile={handleMoveTile}
                   offset={rowIndex % 2 === 1 ? rowOffset : 0}
                   verticalOffset={rowIndex * (height + rowSpacing)}
+                  className="hex-container"
                 />
               );
             })}
@@ -102,7 +104,7 @@ const HexFlower = ({ hexes, onHexDrop, onTileDelete, layoutSize }) => {
           Large
         </LayoutToggle>
       </LayoutToggleContainer>
-    </>
+    </div>
   );
 };
 

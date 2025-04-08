@@ -140,6 +140,7 @@ const Hex = ({ tile, sideLabels = {}, hexId, onMoveTile, offset = 0, verticalOff
 
   return (
     <HexContainer
+      className="hex-container"
       ref={ref}
       hasTile={!!tile}
       isDragging={isDragging}
@@ -147,19 +148,22 @@ const Hex = ({ tile, sideLabels = {}, hexId, onMoveTile, offset = 0, verticalOff
       offset={offset}
       verticalOffset={verticalOffset}
     >
-      <Content>
-        {tile && tile.image && (
-          <ImageContainer>
-            <Image src={tile.image} alt={tile.text || 'Tile image'} />
+      <Content className="hex-content">
+        {tile && (
+          <ImageContainer className="image-container">
+            <Image src={tile.image} alt={tile.text || 'Tile image'} className="image" />
           </ImageContainer>
         )}
-        {tile && tile.text && <Label>{tile.text}</Label>}
+        {tile && tile.text && <Label className="label">{tile.text}</Label>}
+        {Object.entries(sideLabels).map(([side, label]) => (
+          <SideLabel
+            key={side}
+            side={side}
+            label={label}
+            className="side-label"
+          />
+        ))}
       </Content>
-      {Object.entries(sideLabels).map(([side, label]) => (
-        <SideLabel key={side} side={side}>
-          {label}
-        </SideLabel>
-      ))}
     </HexContainer>
   );
 };

@@ -10,10 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "html-to-image": "^1.11.13",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.1",
+    "pdf-lib": "^1.17.1",
     "react": "^19.0.0",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^19.0.0",
+    "react-to-print": "^3.0.5",
     "styled-components": "^6.1.17",
     "uuid": "^11.1.0"
   },
