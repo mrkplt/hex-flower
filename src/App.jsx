@@ -238,6 +238,9 @@ const App = () => {
           <SaveLoadButton type="button" onClick={(e) => e.currentTarget.previousElementSibling.click()}>
             Load
           </SaveLoadButton>
+          <SaveLoadButton type="button" onClick={() => window.print()}>
+            Print
+          </SaveLoadButton>
         </SaveLoadContainer>
         <TileLibrary tiles={tiles} onCreateClick={handleCreateTile} />
         <MainContent>
