@@ -2,8 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { useDrag } from 'react-dnd';
 import { ItemTypes } from '../constants';
-import TileForm from './TileForm';
 import { getHexSize } from '../constants/hexLayout';
+import ImageEditor from './ImageEditor';
 
 const { width: HEX_WIDTH, height: HEX_HEIGHT } = getHexSize();
 
@@ -169,22 +169,21 @@ const DraggableTile = ({ tile }) => {
 };
 
 const TileLibrary = ({ tiles, onCreateClick }) => {
-  const [showForm, setShowForm] = React.useState(false);
+  const [showEditor, setShowEditor] = React.useState(false);
+  const [imageFile, setImageFile] = React.useState(null);
+  const [imageName, setImageName] = React.useState('');
+  const [editedImage, setEditedImage] = React.useState(null);
 
   const handleCreateTile = async (formData) => {
     if (formData.imageFile) {
-      const reader = new FileReader();
-      reader.onload = async (event) => {
-        const newTile = {
-          id: crypto.randomUUID(),
-          image: event.target.result
-        };
-        if (formData.imageName) {
-          newTile.text = formData.imageName;
-        }
-        onCreateClick(newTile);
+      const newTile = {
+        id: crypto.randomUUID(),
+        image: formData.imageFile
       };
-      reader.readAsDataURL(formData.imageFile);
+      if (formData.imageName) {
+        newTile.text = formData.imageName;
+      }
+      onCreateClick(newTile);
     } else {
       const newTile = {
         id: crypto.randomUUID(),
@@ -194,13 +193,43 @@ const TileLibrary = ({ tiles, onCreateClick }) => {
     }
   };
 
+  const handleEditorSave = (editedImage) => {
+    setEditedImage(editedImage);
+    setShowEditor(false);
+    handleCreateTile({
+      imageFile: editedImage,
+      imageName
+    });
+  };
+
+  const handleEditorCancel = () => {
+    setImageFile(null);
+    setEditedImage(null);
+    setShowEditor(false);
+  };
+
+  const handleImageClick = (event) => {
+    event.preventDefault();
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      if (e.target.files && e.target.files[0]) {
+        setImageFile(e.target.files[0]);
+        setShowEditor(true);
+      }
+    };
+    input.click();
+  };
+
   return (
     <LibraryContainer>
-      <CreateButton onClick={() => setShowForm(true)}>➕</CreateButton>
-      {showForm && (
-        <TileForm
-          onClose={() => setShowForm(false)}
-          onSubmit={handleCreateTile}
+      <CreateButton onClick={handleImageClick}>➕</CreateButton>
+      {showEditor && (
+        <ImageEditor
+          image={imageFile}
+          onSave={handleEditorSave}
+          onCancel={handleEditorCancel}
         />
       )}
       <TileContainer>
