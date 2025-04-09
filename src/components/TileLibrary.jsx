@@ -249,16 +249,16 @@ const CreateTileDialog = ({ onClose }) => {
           </ColorButton>
           {showColorPicker && (
             <ColorPickerWrapper>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px' }}>
+              <ColorPickerContainer>
                 <ChromePicker
                   color={tempColor}
                   onChange={(color) => setTempColor(color.hex)}
                 />
-                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
-                  <ColorPickerButton onClick={() => setShowColorPicker(false)}>Cancel</ColorPickerButton>
-                  <ColorPickerButton className="primary" onClick={handleColorConfirm}>Confirm</ColorPickerButton>
-                </div>
-              </div>
+              </ColorPickerContainer>
+              <ColorPickerButtonContainer>
+                <ColorPickerButton onClick={() => setShowColorPicker(false)}>Cancel</ColorPickerButton>
+                <ColorPickerButton className="primary" onClick={handleColorConfirm}>Confirm</ColorPickerButton>
+              </ColorPickerButtonContainer>
             </ColorPickerWrapper>
           )}
         </ColorForm>
@@ -456,22 +456,37 @@ const ColorPickerWrapper = styled.div`
   left: 100%;
   transform: translate(-100%, 0);
   z-index: 1001;
-  background: white;
-  border-radius: 4px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transform: scale(1.5);
   transform-origin: top left;
-  margin-bottom: 20px;
+  padding: 6px;
+  border: 1px solid #e0e0e0;
+`;
+
+const ColorPickerContainer = styled.div`
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 8px;
+`;
+
+const ColorPickerButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+  width: 100%;
+  padding-right: 8px;
 `;
 
 const ColorPickerButton = styled.button`
-  padding: 6px 12px;
+  padding: 3px 6px;
   border: none;
   border-radius: 4px;
   background: #f5f5f5;
   color: #666;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 10px;
   transition: all 0.2s ease;
 
   &:hover {
