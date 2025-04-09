@@ -23,11 +23,15 @@ This entire application was developed by Windsurf, Cascade, and myself as an exe
 - **Tile Library**: Add tiles to your library to drag onto the flower.
 - **Save/Load**: Save your hex flower configurations and load them later.
 - **Printing**: Print your hex flower directly from the application.
-- **Multiple Sizes**: Choose between 2, 3, or 4 hexes to a side for your flower.
+- **Multiple Sizes**: Choose between Small (2 hexes), Medium (3 hexes), or Large (4 hexes) flower layouts.
 - **Tile Management**: 
   - Drag tiles from the library to the hex grid
   - Remove tiles by dragging them to the trashcan
   - Save custom tiles for future use
+- **Layout Management**:
+  - Change layout sizes with confirmation dialog when tiles are present
+  - Reset hexes when changing layouts
+  - Maintain tile library across layout changes
 
 ## Technical Stack
 
@@ -42,6 +46,18 @@ This entire application was developed by Windsurf, Cascade, and myself as an exe
   - Color picker for custom color selection
   - Image format conversion and optimization
 
+## UI Improvements
+
+- **Button Styling**:
+  - Consistent width and spacing for layout buttons
+  - Save/load buttons match layout button styling
+  - Hover states for better visual feedback
+  - Active state colors for better visibility
+- **Layout**:
+  - Fixed right pane (hex flower area) prevents scrolling
+  - Tile library scrolls independently
+  - Improved button z-indexing for better layering
+
 ## Project Structure
 
 ```
@@ -52,6 +68,7 @@ hex-flower-app/
 │   │   ├── HexFlower.jsx      # Main hex grid component
 │   │   ├── TileLibrary.jsx    # Tile selection and management
 │   │   ├── ImageEditor.jsx    # Image cropping and editing
+│   │   ├── LayoutConfirmation.jsx # Layout change confirmation dialog
 │   │   └── Toast.jsx          # Notification system
 │   ├── constants.js          # Application constants
 │   └── App.jsx              # Root component
@@ -83,7 +100,23 @@ npm run build
 npm run preview
 ```
 
-### Important Implementation Details
+## Usage
+
+1. **Create Tiles**:
+   - Click the ➕ button in the tile library to create a new tile
+   - Use the image editor to add and customize images
+   - Use the color picker to set tile background colors
+   - Save tiles to your library for future use
+
+2. **Build a Hex Flower**:
+   - Drag tiles from the library onto the hex grid
+   - Click and drag to move tiles
+   - Remove tiles by dragging them to the trashcan
+   - Choose between Small, Medium, or Large flower layouts
+   - Save your work using the Save button
+   - Print your hex flower using the Print button
+
+## Important Implementation Details
 
 1. **State Management**:
    - Uses React's useState for managing hex tiles and application state
@@ -144,7 +177,3 @@ npm run preview
 [![License: CC BY-NC-SA 4.0](https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png)](https://creativecommons.org/licenses/by-nc-sa/4.0/) CC BY-NC-SA 4.0
 
 ## Contributing
-
-A React-based application for creating and managing Hex Flowers, inspired by the [Hex Flower Power concept](https://goblinshenchman.wordpress.com/hex-power-flower/). This tool allows users to build hex flowers with a drag-and-drop interface.
-
-This entire application was developed by Windsurf, Cascade, and myself as an exercise in learning how to talk with agentic AI. The code is not production ready for whatever definition of production you may use. I also have no idea if it's well architected, I didn't really look at it, and I'm not great with React anyway. Some of the notes in here are to make prompting easier during development by providing context.
