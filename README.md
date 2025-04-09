@@ -8,10 +8,18 @@ This entire application was developed by Windsurf, Cascade, and myself as an exe
 
 - **Drag-and-Drop Interface**: Easily create hex flowers by dragging and dropping tiles.
 - **Customizable Tiles**: Add your own images to create unique tiles.
-- **Image Editor**: Before adding an image to a tile, you can:
-  - Crop the image to fit the hex shape
+- **Advanced Image Editor**: Before adding an image to a tile, you can:
+  - Crop the image to fit the hex shape with precise control
   - Rotate the image in 90-degree increments
   - Zoom in/out to adjust the composition
+  - Maintain aspect ratio automatically
+  - Upload various image formats
+  - Preview changes in real-time
+- **Color Picker Integration**: 
+  - Choose custom colors for tile backgrounds
+  - Select colors from a palette or use color picker
+  - Maintain color consistency across tiles
+  - Preview color changes before applying
 - **Tile Library**: Add tiles to your library to drag onto the flower.
 - **Save/Load**: Save your hex flower configurations and load them later.
 - **Printing**: Print your hex flower directly from the application.
@@ -29,7 +37,10 @@ This entire application was developed by Windsurf, Cascade, and myself as an exe
 - **Drag-and-Drop**: React DnD with HTML5 Backend
 - **PDF Generation**: jspdf and html2canvas
 - **UUID Generation**: uuid
-- **Image Processing**: Cropper.js for image editing
+- **Image Processing**: 
+  - Cropper.js for advanced image editing
+  - Color picker for custom color selection
+  - Image format conversion and optimization
 
 ## Project Structure
 
@@ -78,6 +89,7 @@ npm run preview
    - Uses React's useState for managing hex tiles and application state
    - Implements custom hooks for complex state logic
    - Maintains separate state for library tiles and active flower tiles
+   - Handles color state synchronization
 
 2. **Drag-and-Drop System**:
    - Utilizes React DnD for tile manipulation
@@ -85,11 +97,14 @@ npm run preview
    - Optimized for performance with memoization
    - Implements drag-to-trash functionality
 
-3. **Image Processing**:
-   - Uses Cropper.js for image editing
-   - Maintains aspect ratio for hex-shaped tiles
-   - Implements rotation and zoom controls
+3. **Image Processing and Color Management**:
+   - Uses Cropper.js for advanced image editing
+   - Maintains hex-shaped aspect ratio during cropping
+   - Implements 90-degree rotation increments
+   - Provides zoom controls for precise composition
+   - Integrates color picker for custom tile colors
    - Handles image file uploads and conversions
+   - Maintains color consistency across tiles
 
 4. **PDF Export**:
    - Combines html2canvas and jspdf for high-quality exports
@@ -101,10 +116,12 @@ npm run preview
 1. **Create a New Tile**:
    - Click the + button in the tile library
    - Select an image from your computer
-   - Use the image editor to:
+   - Use the advanced image editor to:
      - Crop the image to fit the hex shape
      - Rotate the image using the rotation buttons
      - Zoom in/out using the zoom buttons
+     - Choose custom colors using the color picker
+     - Preview changes in real-time
    - Click Save to add the edited image as a new tile
    - Click Cancel to discard changes
 
