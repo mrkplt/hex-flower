@@ -69,7 +69,6 @@ const Label = styled.div`
   word-wrap: break-word;
   max-width: 80%;
   z-index: 2;
-  background: rgba(255, 255, 255, 0.8);
   padding: 2px 6px;
   border-radius: 4px;
   position: absolute;
@@ -80,6 +79,18 @@ const Label = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  color: ${props => {
+    // Convert hex color to RGB
+    const r = parseInt(props.color.slice(1, 3), 16);
+    const g = parseInt(props.color.slice(3, 5), 16);
+    const b = parseInt(props.color.slice(5, 7), 16);
+    
+    // Calculate luminance
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    
+    // Return white text for dark colors, black text for light colors
+    return luminance > 0.5 ? '#000000' : '#ffffff';
+  }};
 `;
 
 const ImageContainer = styled.div`
@@ -173,7 +184,7 @@ const Hex = ({ tile, sideLabels = {}, hexId, onMoveTile, offset = 0, verticalOff
                 <Image src={tile.image} alt={tile.text || 'Tile image'} className="image" />
               </ImageContainer>
             )}
-            {tile.text && <Label className="label">{tile.text}</Label>}
+            {tile.text && <Label color={tile.color} className="label">{tile.text}</Label>}
           </Interior>
         )}
         {Object.entries(sideLabels).map(([side, label]) => (

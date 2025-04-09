@@ -4,7 +4,7 @@ import { useDrag } from 'react-dnd';
 import { ItemTypes } from '../constants';
 import { getHexSize } from '../constants/hexLayout';
 import ImageEditor from './ImageEditor';
-import { ChromePicker } from 'react-color';
+import { SketchPicker } from 'react-color';
 
 const { width: HEX_WIDTH, height: HEX_HEIGHT } = getHexSize();
 
@@ -101,7 +101,6 @@ const TileImage = styled.img`
 const TileText = styled.div`
   font-size: 12px;
   text-align: center;
-  margin-top: 5px;
   word-wrap: break-word;
   max-width: 80%;
   z-index: 2;
@@ -115,6 +114,18 @@ const TileText = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  color: ${props => {
+    // Convert hex color to RGB
+    const r = parseInt(props.color.slice(1, 3), 16);
+    const g = parseInt(props.color.slice(3, 5), 16);
+    const b = parseInt(props.color.slice(5, 7), 16);
+    
+    // Calculate luminance
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    
+    // Return white text for dark colors, black text for light colors
+    return luminance > 0.5 ? '#000000' : '#ffffff';
+  }};
 `;
 
 const CreateButton = styled.button`
@@ -181,7 +192,7 @@ const DraggableTile = ({ tile }) => {
               <TileImage src={tile.image} alt={tile.text || 'Tile image'} />
             </ImageContainer>
           )}
-          {tile.text && <TileText>{tile.text}</TileText>}
+          {tile.text && <TileText color={tile.color}>{tile.text}</TileText>}
         </Interior>
       </TileContent>
     </Tile>
@@ -193,6 +204,20 @@ const CreateTileDialog = ({ onClose }) => {
   const [color, setColor] = React.useState('#ffffff');
   const [showColorPicker, setShowColorPicker] = React.useState(false);
   const [tempColor, setTempColor] = React.useState('#ffffff');
+  const colorPickerRef = React.useRef(null);
+
+  React.useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (colorPickerRef.current && !colorPickerRef.current.contains(event.target)) {
+        setShowColorPicker(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleChooseImage = () => {
     const input = document.createElement('input');
@@ -248,9 +273,9 @@ const CreateTileDialog = ({ onClose }) => {
             {showColorPicker ? '✓' : 'Background Color'}
           </ColorButton>
           {showColorPicker && (
-            <ColorPickerWrapper>
+            <ColorPickerWrapper ref={colorPickerRef}>
               <ColorPickerContainer>
-                <ChromePicker
+                <SketchPicker
                   color={tempColor}
                   onChange={(color) => setTempColor(color.hex)}
                 />
@@ -459,7 +484,7 @@ const ColorPickerWrapper = styled.div`
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transform: scale(1.5);
+  transform: scale(1.2);
   transform-origin: top left;
   padding: 6px;
   border: 1px solid #e0e0e0;
@@ -469,6 +494,7 @@ const ColorPickerContainer = styled.div`
   background: #f8f9fa;
   border-radius: 8px;
   padding: 8px;
+  margin-bottom: 0px;
 `;
 
 const ColorPickerButtonContainer = styled.div`
