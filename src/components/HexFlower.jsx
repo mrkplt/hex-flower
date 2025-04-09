@@ -25,7 +25,7 @@ const LayoutToggleContainer = styled.div`
   left: 370px;
   display: flex;
   gap: 10px;
-  z-index: 1000;
+  z-index: 900;
 `;
 
 const LayoutToggle = styled.button`
