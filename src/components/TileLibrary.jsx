@@ -168,63 +168,104 @@ const DraggableTile = ({ tile }) => {
   );
 };
 
-const TileLibrary = ({ tiles, onCreateClick }) => {
-  const [showEditor, setShowEditor] = React.useState(false);
-  const [imageFile, setImageFile] = React.useState(null);
-  const [imageName, setImageName] = React.useState('');
-  const [editedImage, setEditedImage] = React.useState(null);
+const CreateTileDialog = ({ onClose }) => {
+  const [text, setText] = React.useState('');
 
-  const handleCreateTile = async (formData) => {
-    if (formData.imageFile) {
-      const newTile = {
-        id: crypto.randomUUID(),
-        image: formData.imageFile
-      };
-      if (formData.imageName) {
-        newTile.text = formData.imageName;
-      }
-      onCreateClick(newTile);
-    } else {
-      const newTile = {
-        id: crypto.randomUUID(),
-        text: formData.imageName
-      };
-      onCreateClick(newTile);
-    }
-  };
-
-  const handleEditorSave = (editedImage) => {
-    setEditedImage(editedImage);
-    setShowEditor(false);
-    handleCreateTile({
-      imageFile: editedImage,
-      imageName
-    });
-  };
-
-  const handleEditorCancel = () => {
-    setImageFile(null);
-    setEditedImage(null);
-    setShowEditor(false);
-  };
-
-  const handleImageClick = (event) => {
-    event.preventDefault();
+  const handleChooseImage = () => {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
     input.onchange = (e) => {
       if (e.target.files && e.target.files[0]) {
-        setImageFile(e.target.files[0]);
-        setShowEditor(true);
+        onClose({
+          type: 'image',
+          file: e.target.files[0],
+          text
+        });
       }
     };
     input.click();
   };
 
+  const handleSave = () => {
+    if (text.trim()) {
+      onClose({
+        type: 'text',
+        text
+      });
+    }
+  };
+
+  return (
+    <Dialog>
+      <DialogTitle>Create New Tile</DialogTitle>
+      <DialogContent>
+        <TextForm>
+          <Label>Tile Text:</Label>
+          <Input
+            type="text"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder="Enter tile text"
+          />
+        </TextForm>
+
+        <ButtonGroup>
+          <Button className="secondary" onClick={handleChooseImage}>Choose Image</Button>
+          <Button className="secondary" onClick={() => onClose(null)}>Cancel</Button>
+          <Button className="primary" onClick={handleSave}>Save</Button>
+        </ButtonGroup>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+const TileLibrary = ({ tiles, onCreateClick }) => {
+  const [showDialog, setShowDialog] = React.useState(false);
+  const [showEditor, setShowEditor] = React.useState(false);
+  const [imageFile, setImageFile] = React.useState(null);
+  const [tileData, setTileData] = React.useState(null);
+
+  const handleCreateTile = (data) => {
+    if (data) {
+      if (data.type === 'image') {
+        setImageFile(data.file);
+        setShowEditor(true);
+        setTileData(data);
+      } else {
+        const newTile = {
+          id: crypto.randomUUID(),
+          text: data.text
+        };
+        onCreateClick(newTile);
+      }
+    }
+    setShowDialog(false);
+  };
+
+  const handleEditorSave = (editedImage) => {
+    if (tileData) {
+      const newTile = {
+        id: crypto.randomUUID(),
+        image: editedImage,
+        text: tileData.text
+      };
+      onCreateClick(newTile);
+    }
+    setShowEditor(false);
+  };
+
+  const handleEditorCancel = () => {
+    setImageFile(null);
+    setShowEditor(false);
+  };
+
   return (
     <LibraryContainer>
-      <CreateButton onClick={handleImageClick}>➕</CreateButton>
+      <CreateButton onClick={() => setShowDialog(true)}>➕</CreateButton>
+      {showDialog && (
+        <CreateTileDialog onClose={handleCreateTile} />
+      )}
       {showEditor && (
         <ImageEditor
           image={imageFile}
@@ -240,5 +281,87 @@ const TileLibrary = ({ tiles, onCreateClick }) => {
     </LibraryContainer>
   );
 };
+
+const Dialog = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+`;
+
+const DialogTitle = styled.h2`
+  margin: 0 0 20px 0;
+  font-size: 24px;
+  color: #333;
+`;
+
+const DialogContent = styled.div`
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
+const TextForm = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const Label = styled.label`
+  font-size: 16px;
+  color: #333;
+`;
+
+const Input = styled.input`
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+`;
+
+const Button = styled.button`
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  color: white;
+  
+  &.secondary {
+    background: #f44336;
+  }
+  
+  &.primary {
+    background: #4CAF50;
+  }
+  
+  &:hover {
+    &.secondary {
+      background: #d32f2f;
+    }
+    
+    &.primary {
+      background: #45a049;
+    }
+  }
+`;
 
 export default TileLibrary;
