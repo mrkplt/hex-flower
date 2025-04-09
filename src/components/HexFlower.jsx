@@ -4,6 +4,7 @@ import { ItemTypes } from '../constants';
 import Hex from './Hex';
 import TrashZone from './TrashZone';
 import { getFlowerLayout, getHexDimensions } from '../constants/hexLayout';
+import LayoutConfirmation from './LayoutConfirmation';
 
 const { width, height, rowOffset, rowSpacing } = getHexDimensions();
 
@@ -43,6 +44,27 @@ const LayoutToggle = styled.button`
 `;
 
 const HexFlower = ({ hexes, onHexDrop, onTileDelete, layoutSize }) => {
+  const [showConfirmation, setShowConfirmation] = React.useState(false);
+  const [pendingLayout, setPendingLayout] = React.useState(null);
+
+  const handleLayoutChange = (size) => {
+    // Check if any hex has a tile
+    const hasTiles = Object.values(hexes).some(hex => hex.tile);
+    
+    if (hasTiles) {
+      setPendingLayout(size);
+      setShowConfirmation(true);
+    } else {
+      // No tiles present, proceed with layout change immediately
+      onHexDrop(null, null, { type: 'layout', size });
+    }
+  };
+
+  const confirmLayoutChange = (size) => {
+    onHexDrop(null, null, { type: 'layout', size });
+    setShowConfirmation(false);
+  };
+
   const layout = getFlowerLayout(layoutSize);
   const { width, height, rowOffset, rowSpacing } = getHexDimensions();
 
@@ -87,23 +109,30 @@ const HexFlower = ({ hexes, onHexDrop, onTileDelete, layoutSize }) => {
       <LayoutToggleContainer>
         <LayoutToggle 
           isActive={layoutSize === 'SMALL'}
-          onClick={() => onHexDrop(null, null, { type: 'layout', size: 'SMALL' })}
+          onClick={() => handleLayoutChange('SMALL')}
         >
           Small
         </LayoutToggle>
         <LayoutToggle 
           isActive={layoutSize === 'MEDIUM'}
-          onClick={() => onHexDrop(null, null, { type: 'layout', size: 'MEDIUM' })}
+          onClick={() => handleLayoutChange('MEDIUM')}
         >
           Medium
         </LayoutToggle>
         <LayoutToggle 
           isActive={layoutSize === 'LARGE'}
-          onClick={() => onHexDrop(null, null, { type: 'layout', size: 'LARGE' })}
+          onClick={() => handleLayoutChange('LARGE')}
         >
           Large
         </LayoutToggle>
       </LayoutToggleContainer>
+
+      <LayoutConfirmation
+        isOpen={showConfirmation}
+        onClose={() => setShowConfirmation(false)}
+        onConfirm={confirmLayoutChange}
+        layoutSize={pendingLayout}
+      />
     </div>
   );
 };

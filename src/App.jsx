@@ -61,6 +61,8 @@ const App = () => {
   const handleHexDrop = (sourceHexId, targetHexId, tile) => {
     if (tile?.type === 'layout') {
       setLayoutSize(tile.size);
+      // Reset hexes to empty state when changing layout
+      setHexes({});
       return;
     }
 
