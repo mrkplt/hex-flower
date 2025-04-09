@@ -54,6 +54,15 @@ const Content = styled.div`
   clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
 `;
 
+const Interior = styled.div`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+`;
+
 const Label = styled.div`
   font-size: 12px;
   text-align: center;
@@ -63,6 +72,14 @@ const Label = styled.div`
   background: rgba(255, 255, 255, 0.8);
   padding: 2px 6px;
   border-radius: 4px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const ImageContainer = styled.div`
@@ -150,11 +167,15 @@ const Hex = ({ tile, sideLabels = {}, hexId, onMoveTile, offset = 0, verticalOff
     >
       <Content className="hex-content">
         {tile && (
-          <ImageContainer className="image-container">
-            <Image src={tile.image} alt={tile.text || 'Tile image'} className="image" />
-          </ImageContainer>
+          <Interior style={{ backgroundColor: tile.color }}>
+            {tile.image && (
+              <ImageContainer className="image-container">
+                <Image src={tile.image} alt={tile.text || 'Tile image'} className="image" />
+              </ImageContainer>
+            )}
+            {tile.text && <Label className="label">{tile.text}</Label>}
+          </Interior>
         )}
-        {tile && tile.text && <Label className="label">{tile.text}</Label>}
         {Object.entries(sideLabels).map(([side, label]) => (
           <SideLabel
             key={side}

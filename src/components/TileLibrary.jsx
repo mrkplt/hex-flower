@@ -4,6 +4,7 @@ import { useDrag } from 'react-dnd';
 import { ItemTypes } from '../constants';
 import { getHexSize } from '../constants/hexLayout';
 import ImageEditor from './ImageEditor';
+import { ChromePicker } from 'react-color';
 
 const { width: HEX_WIDTH, height: HEX_HEIGHT } = getHexSize();
 
@@ -71,6 +72,13 @@ const TileContent = styled.div`
   clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
 `;
 
+const Interior = styled.div`
+  width: 100%;
+  height: 100%;
+  position: relative;
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+`;
+
 const ImageContainer = styled.div`
   position: absolute;
   width: 100%;
@@ -99,6 +107,14 @@ const TileText = styled.div`
   z-index: 2;
   padding: 2px 6px;
   border-radius: 4px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const CreateButton = styled.button`
@@ -159,10 +175,14 @@ const DraggableTile = ({ tile }) => {
   return (
     <Tile ref={drag} isDragging={isDragging}>
       <TileContent>
-        <ImageContainer>
-          <TileImage src={tile.image} alt={tile.text || 'Tile image'} />
-        </ImageContainer>
-        {tile.text && <TileText>{tile.text}</TileText>}
+        <Interior style={{ backgroundColor: tile.color }}>
+          {tile.image && (
+            <ImageContainer>
+              <TileImage src={tile.image} alt={tile.text || 'Tile image'} />
+            </ImageContainer>
+          )}
+          {tile.text && <TileText>{tile.text}</TileText>}
+        </Interior>
       </TileContent>
     </Tile>
   );
@@ -170,6 +190,8 @@ const DraggableTile = ({ tile }) => {
 
 const CreateTileDialog = ({ onClose }) => {
   const [text, setText] = React.useState('');
+  const [color, setColor] = React.useState('#ffffff');
+  const [showColorPicker, setShowColorPicker] = React.useState(false);
 
   const handleChooseImage = () => {
     const input = document.createElement('input');
@@ -180,7 +202,8 @@ const CreateTileDialog = ({ onClose }) => {
         onClose({
           type: 'image',
           file: e.target.files[0],
-          text
+          text,
+          color
         });
       }
     };
@@ -191,7 +214,8 @@ const CreateTileDialog = ({ onClose }) => {
     if (text.trim()) {
       onClose({
         type: 'text',
-        text
+        text,
+        color
       });
     }
   };
@@ -209,6 +233,23 @@ const CreateTileDialog = ({ onClose }) => {
             placeholder="Enter tile text"
           />
         </TextForm>
+
+        <ColorForm>
+          <ColorButton
+            style={{ backgroundColor: color }}
+            onClick={() => setShowColorPicker(!showColorPicker)}
+          >
+            {showColorPicker ? '✓' : '🎨'}
+          </ColorButton>
+          {showColorPicker && (
+            <ColorPickerWrapper>
+              <ChromePicker
+                color={color}
+                onChange={(color) => setColor(color.hex)}
+              />
+            </ColorPickerWrapper>
+          )}
+        </ColorForm>
 
         <ButtonGroup>
           <Button className="secondary" onClick={handleChooseImage}>Choose Image</Button>
@@ -235,7 +276,8 @@ const TileLibrary = ({ tiles, onCreateClick }) => {
       } else {
         const newTile = {
           id: crypto.randomUUID(),
-          text: data.text
+          text: data.text,
+          color: data.color
         };
         onCreateClick(newTile);
       }
@@ -248,7 +290,8 @@ const TileLibrary = ({ tiles, onCreateClick }) => {
       const newTile = {
         id: crypto.randomUUID(),
         image: editedImage,
-        text: tileData.text
+        text: tileData.text,
+        color: tileData.color
       };
       onCreateClick(newTile);
     }
@@ -362,6 +405,36 @@ const Button = styled.button`
       background: #45a049;
     }
   }
+`;
+
+const ColorForm = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+`;
+
+const ColorButton = styled.button`
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  color: white;
+  
+  &:hover {
+    opacity: 0.9;
+  }
+`;
+
+const ColorPickerWrapper = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1001;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 `;
 
 export default TileLibrary;
