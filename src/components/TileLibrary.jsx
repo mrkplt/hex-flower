@@ -192,6 +192,7 @@ const CreateTileDialog = ({ onClose }) => {
   const [text, setText] = React.useState('');
   const [color, setColor] = React.useState('#ffffff');
   const [showColorPicker, setShowColorPicker] = React.useState(false);
+  const [tempColor, setTempColor] = React.useState('#ffffff');
 
   const handleChooseImage = () => {
     const input = document.createElement('input');
@@ -220,6 +221,11 @@ const CreateTileDialog = ({ onClose }) => {
     }
   };
 
+  const handleColorConfirm = () => {
+    setColor(tempColor);
+    setShowColorPicker(false);
+  };
+
   return (
     <Dialog>
       <DialogTitle>Create New Tile</DialogTitle>
@@ -237,16 +243,22 @@ const CreateTileDialog = ({ onClose }) => {
         <ColorForm>
           <ColorButton
             style={{ backgroundColor: color }}
-            onClick={() => setShowColorPicker(!showColorPicker)}
+            onClick={() => setShowColorPicker(true)}
           >
-            {showColorPicker ? '✓' : '🎨'}
+            {showColorPicker ? '✓' : 'Background Color'}
           </ColorButton>
           {showColorPicker && (
             <ColorPickerWrapper>
-              <ChromePicker
-                color={color}
-                onChange={(color) => setColor(color.hex)}
-              />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '10px' }}>
+                <ChromePicker
+                  color={tempColor}
+                  onChange={(color) => setTempColor(color.hex)}
+                />
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+                  <ColorPickerButton onClick={() => setShowColorPicker(false)}>Cancel</ColorPickerButton>
+                  <ColorPickerButton className="primary" onClick={handleColorConfirm}>Confirm</ColorPickerButton>
+                </div>
+              </div>
             </ColorPickerWrapper>
           )}
         </ColorForm>
@@ -420,7 +432,18 @@ const ColorButton = styled.button`
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
-  color: white;
+  color: ${props => {
+    // Convert hex color to RGB
+    const r = parseInt(props.style.backgroundColor.slice(1, 3), 16);
+    const g = parseInt(props.style.backgroundColor.slice(3, 5), 16);
+    const b = parseInt(props.style.backgroundColor.slice(5, 7), 16);
+    
+    // Calculate luminance
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    
+    // Return white text for dark colors, black text for light colors
+    return luminance > 0.5 ? '#000000' : '#ffffff';
+  }};
   
   &:hover {
     opacity: 0.9;
@@ -429,12 +452,49 @@ const ColorButton = styled.button`
 
 const ColorPickerWrapper = styled.div`
   position: absolute;
-  top: 100%;
-  left: 0;
+  top: -100%;
+  left: 100%;
+  transform: translate(-100%, 0);
   z-index: 1001;
   background: white;
   border-radius: 4px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transform: scale(1.5);
+  transform-origin: top left;
+  margin-bottom: 20px;
+`;
+
+const ColorPickerButton = styled.button`
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  background: #f5f5f5;
+  color: #666;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #e0e0e0;
+    color: #333;
+  }
+
+  &:active {
+    background: #dcdcdc;
+  }
+
+  &.primary {
+    background: #4CAF50;
+    color: white;
+
+    &:hover {
+      background: #45a049;
+    }
+
+    &:active {
+      background: #409145;
+    }
+  }
 `;
 
 export default TileLibrary;
