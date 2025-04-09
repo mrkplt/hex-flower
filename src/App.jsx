@@ -30,16 +30,25 @@ const SaveLoadContainer = styled.div`
 `;
 
 const SaveLoadButton = styled.button`
-  padding: 8px 16px;
+  width: 90px;
+  padding: 8px;
   border: none;
   border-radius: 4px;
   background: ${props => props.type === 'save' ? '#4CAF50' : '#2196F3'};
   color: white;
   cursor: pointer;
-  transition: opacity 0.2s ease;
+  transition: all 0.2s ease;
+  text-align: center;
+  font-size: 14px;
 
   &:hover {
-    opacity: 0.9;
+    background: ${props => props.type === 'save' ? '#4CAF50' : '#1976D2'};
+  }
+
+  &:focus,
+  &:focus-visible {
+    outline: 2px solid ${props => props.type === 'save' ? '#4CAF50' : '#1976D2'};
+    outline-offset: 2px;
   }
 `;
 

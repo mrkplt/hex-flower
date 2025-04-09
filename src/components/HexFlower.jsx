@@ -30,13 +30,16 @@ const LayoutToggleContainer = styled.div`
 `;
 
 const LayoutToggle = styled.button`
-  padding: 8px 16px;
+  width: 90px;
+  padding: 8px;
   border: none;
   border-radius: 4px;
-  background: ${props => props.isActive ? '#4CAF50' : '#f5f5f5'};
+  background: ${props => props.isActive ? '#4CAF50' : '#f0f0f0'};
   color: ${props => props.isActive ? 'white' : '#333'};
   cursor: pointer;
   transition: all 0.2s ease;
+  text-align: center;
+  font-size: 14px;
 
   &:hover {
     background: ${props => props.isActive ? '#4CAF50' : '#e0e0e0'};
