@@ -162,12 +162,11 @@ const ImageEditor = ({ image, onSave, onCancel }) => {
             {error}
           </Error>
         )}
+        <ButtonGroup>
+          <Button className="secondary" onClick={onCancel}>Cancel</Button>
+          <Button className="primary" onClick={handleSave}>Save</Button>
+        </ButtonGroup>
       </Editor>
-
-      <ButtonGroup>
-        <Button className="secondary" onClick={onCancel}>Cancel</Button>
-        <Button className="primary" onClick={handleSave}>Save</Button>
-      </ButtonGroup>
     </Container>
   );
 };
@@ -195,14 +194,17 @@ const Editor = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  position: relative;
 `;
 
 const Controls = styled.div`
   display: flex;
   gap: 10px;
+  justify-content: center;
   padding: 10px;
   background: #f8f9fa;
   border-radius: 4px;
+  margin-top: 10px;
 `;
 
 const Button = styled.button`
@@ -210,6 +212,9 @@ const Button = styled.button`
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 14px;
+  min-width: 90px;
+  text-align: center;
   
   ${props => props.className === 'primary' ? `
     background: #4CAF50;
@@ -229,9 +234,12 @@ const Button = styled.button`
 `;
 
 const ButtonGroup = styled.div`
-  margin-top: 20px;
   display: flex;
   gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+  padding: 0 20px;
+  box-sizing: border-box;
 `;
 
 const Error = styled.div`
