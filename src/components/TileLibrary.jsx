@@ -6,7 +6,7 @@ import { getHexSize } from '../constants/hexLayout';
 import ImageEditor from './ImageEditor';
 import { SketchPicker } from 'react-color';
 
-const { width: HEX_WIDTH, height: HEX_HEIGHT } = getHexSize();
+const { width, height } = getHexSize();
 
 const LibraryContainer = styled.div`
   width: 350px;
@@ -31,8 +31,8 @@ const TileContainer = styled.div`
 `;
 
 const Tile = styled.div`
-  width: ${HEX_WIDTH}px;
-  height: ${HEX_HEIGHT}px;
+  width: ${width}px;
+  height: ${height}px;
   cursor: grab;
   opacity: ${props => props.isDragging ? 0.5 : 1};
   clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
@@ -45,13 +45,27 @@ const Tile = styled.div`
 
 const TileContent = styled.div`
   height: 100%;
+  background: black;
 `;
 
 const Interior = styled.div`
   width: 100%;
   height: 100%;
   position: relative;
+  content: '';
+  top: 1px;
+  left: 1px;
+  height: calc(100% - 2px);
+  width: calc(100% - 2px);
   clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  transition: all 0.2s ease;
+
+  &:hover {
+    top: 4px;
+    left: 4px;
+    height: calc(100% - 8px);
+    width: calc(100% - 8px);
+  }
 `;
 
 const ImageContainer = styled.div`
@@ -89,13 +103,15 @@ const TileText = styled.div`
 `;
 
 const CreateButton = styled.button`
-  width: ${HEX_WIDTH}px;
-  height: calc(${HEX_HEIGHT}px * 1.10);
+  width: ${width}px;
+  height: ${height}px;
   position: relative;
   cursor: pointer;
   background: none;
   border: none;
   padding: 0;
+  min-height: ${height}px;
+  max-height: ${height}px;
   
   &:before {
     content: '';
@@ -121,16 +137,7 @@ const CreateButton = styled.button`
   }
 
   &:hover:before {
-    background: #45a049;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  }
-
-  &:focus {
-    outline: none;
-  }
-
-  &:focus:before {
-    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
+    background: #6c6
   }
 `;
 
