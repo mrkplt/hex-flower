@@ -63,6 +63,20 @@ const Interior = styled.div`
   width: 100%;
   height: 100%;
   position: absolute;
+  top: 1px;
+  left: 1px;
+  height: calc(100% - 2px);
+  width: calc(100% - 2px);
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  transition: all 0.2s ease;
+  overflow: hidden;
+
+  &:hover {
+    top: 4px;  /* border width */
+    left: 4px;  /* border width */
+    height: calc(100% - 8px);  /* 100% - (2 * border width) */
+    width: calc(100% - 8px);  /* 100% - (2 * border width) */
+  }
 `;
 
 const Label = styled.div`
@@ -102,7 +116,21 @@ const ImageContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  height: calc(100% - 2px);
+  width: calc(100% - 2px);
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  transition: all 0.2s ease;
   overflow: hidden;
+
+  &:hover {
+    top: 4px;  /* border width */
+    left: 4px;  /* border width */
+    height: calc(100% - 8px);  /* 100% - (2 * border width) */
+    width: calc(100% - 8px);  /* 100% - (2 * border width) */
+  }
 `;
 
 const Image = styled.img`
@@ -152,14 +180,19 @@ const Hex = ({ tile, hexId, onMoveTile, offset = 0, verticalOffset = 0 }) => {
     >
       <Content className="hex-content">
         {tile && (
-          <Interior style={{ backgroundColor: tile.color }}>
+          <>
+            {!tile.image && <Interior style={{ backgroundColor: tile.color }}>
+              {tile.text && <Label color={tile.color} className="label">{tile.text}</Label>}
+              </Interior>
+            }
             {tile.image && (
               <ImageContainer className="image-container">
-                <Image src={tile.image} alt={tile.text || 'Tile image'} className="image" />
+                <Image src={tile.image} alt={tile.text || 'Tile image'} className="image"/>
+                {tile.text && <Label color={tile.color} className="label">{tile.text}</Label>}
               </ImageContainer>
             )}
-            {tile.text && <Label color={tile.color} className="label">{tile.text}</Label>}
-          </Interior>
+            
+          </>
         )}
       </Content>
     </HexContainer>

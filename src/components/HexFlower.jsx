@@ -69,7 +69,7 @@ const HexFlower = ({ hexes, onHexDrop, onTileDelete, layoutSize }) => {
   };
 
   const layout = getFlowerLayout(layoutSize);
-  const { width, height, rowOffset, rowSpacing } = getHexDimensions();
+  const { height, rowOffset, rowSpacing } = getHexDimensions();
 
   const handleMoveTile = (sourceHexId, targetHexId, tile) => {
     if (sourceHexId === targetHexId) return;
@@ -95,7 +95,6 @@ const HexFlower = ({ hexes, onHexDrop, onTileDelete, layoutSize }) => {
                   key={hexId}
                   hexId={hexId}
                   tile={tile}
-                  sideLabels={hex.sideLabels}
                   onMoveTile={handleMoveTile}
                   offset={rowIndex % 2 === 1 ? rowOffset : 0}
                   verticalOffset={rowIndex * (height + rowSpacing)}
