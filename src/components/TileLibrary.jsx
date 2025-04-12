@@ -432,7 +432,7 @@ const CreateTileDialog = ({ onClose }) => {
         </ColorForm>
 
         <ButtonGroup>
-          <Button className="secondary" onClick={handleChooseImage}>Choose Image</Button>
+          <Button className="primary" onClick={handleChooseImage}>Choose Image</Button>
           <Button className="secondary" onClick={() => onClose(null)}>Cancel</Button>
           <Button className="primary" onClick={handleSave}>Save</Button>
         </ButtonGroup>
