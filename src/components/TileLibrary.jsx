@@ -33,43 +33,18 @@ const TileContainer = styled.div`
 const Tile = styled.div`
   width: ${HEX_WIDTH}px;
   height: ${HEX_HEIGHT}px;
-  position: relative;
   cursor: grab;
   opacity: ${props => props.isDragging ? 0.5 : 1};
-  
-  &:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: white;
-    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-    border: 2px solid #ddd;
-    transition: box-shadow 0.2s ease;
-  }
-
-  &:hover:before {
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  }
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
 
   &:active {
     cursor: grabbing;
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
   }
 `;
 
 const TileContent = styled.div`
-  position: relative;
-  width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 1;
-  overflow: hidden;
-  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
 `;
 
 const Interior = styled.div`
@@ -84,36 +59,21 @@ const ImageContainer = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
 `;
 
 const TileImage = styled.img`
   min-width: 100%;
-  min-height: 100%;
-  width: auto;
-  height: auto;
   object-fit: cover;
-  object-position: center;
 `;
 
 const TileText = styled.div`
   font-size: 12px;
-  text-align: center;
   word-wrap: break-word;
-  max-width: 80%;
   z-index: 2;
-  padding: 2px 6px;
-  border-radius: 4px;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   color: ${props => {
     // Convert hex color to RGB
     const r = parseInt(props.color.slice(1, 3), 16);
@@ -130,7 +90,7 @@ const TileText = styled.div`
 
 const CreateButton = styled.button`
   width: ${HEX_WIDTH}px;
-  height: ${HEX_HEIGHT}px;
+  height: calc(${HEX_HEIGHT}px * 1.10);
   position: relative;
   cursor: pointer;
   background: none;
@@ -171,6 +131,182 @@ const CreateButton = styled.button`
 
   &:focus:before {
     box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
+  }
+`;
+
+const Dialog = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+`;
+
+const DialogTitle = styled.h2`
+  margin: 0 0 20px 0;
+  font-size: 24px;
+  color: #333;
+`;
+
+const DialogContent = styled.div`
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
+const TextForm = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const Label = styled.label`
+  font-size: 16px;
+  color: #333;
+`;
+
+const Input = styled.input`
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+`;
+
+const Button = styled.button`
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  color: white;
+  
+  &.secondary {
+    background: #f44336;
+  }
+  
+  &.primary {
+    background: #4CAF50;
+  }
+  
+  &:hover {
+    &.secondary {
+      background: #d32f2f;
+    }
+    
+    &.primary {
+      background: #45a049;
+    }
+  }
+`;
+
+const ColorForm = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+`;
+
+const ColorButton = styled.button`
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  color: ${props => {
+    // Convert hex color to RGB
+    const r = parseInt(props.style.backgroundColor.slice(1, 3), 16);
+    const g = parseInt(props.style.backgroundColor.slice(3, 5), 16);
+    const b = parseInt(props.style.backgroundColor.slice(5, 7), 16);
+    
+    // Calculate luminance
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    
+    // Return white text for dark colors, black text for light colors
+    return luminance > 0.5 ? '#000000' : '#ffffff';
+  }};
+  
+  &:hover {
+    opacity: 0.9;
+  }
+`;
+
+const ColorPickerWrapper = styled.div`
+  position: absolute;
+  top: -100%;
+  left: 100%;
+  transform: translate(-100%, 0);
+  z-index: 1001;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: scale(1.2);
+  transform-origin: top left;
+  padding: 6px;
+  border: 1px solid #e0e0e0;
+`;
+
+const ColorPickerContainer = styled.div`
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 0px;
+`;
+
+const ColorPickerButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+  width: 100%;
+  padding-right: 8px;
+`;
+
+const ColorPickerButton = styled.button`
+  padding: 3px 6px;
+  border: none;
+  border-radius: 4px;
+  background: #f5f5f5;
+  color: #666;
+  cursor: pointer;
+  font-size: 10px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #e0e0e0;
+    color: #333;
+  }
+
+  &:active {
+    background: #dcdcdc;
+  }
+
+  &.primary {
+    background: #4CAF50;
+    color: white;
+
+    &:hover {
+      background: #45a049;
+    }
+
+    &:active {
+      background: #409145;
+    }
   }
 `;
 
@@ -361,181 +497,5 @@ const TileLibrary = ({ tiles, onCreateClick }) => {
     </LibraryContainer>
   );
 };
-
-const Dialog = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-`;
-
-const DialogTitle = styled.h2`
-  margin: 0 0 20px 0;
-  font-size: 24px;
-  color: #333;
-`;
-
-const DialogContent = styled.div`
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  width: 80%;
-  max-width: 500px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
-
-const TextForm = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
-
-const Label = styled.label`
-  font-size: 16px;
-  color: #333;
-`;
-
-const Input = styled.input`
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 16px;
-`;
-
-const ButtonGroup = styled.div`
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-`;
-
-const Button = styled.button`
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-  color: white;
-  
-  &.secondary {
-    background: #f44336;
-  }
-  
-  &.primary {
-    background: #4CAF50;
-  }
-  
-  &:hover {
-    &.secondary {
-      background: #d32f2f;
-    }
-    
-    &.primary {
-      background: #45a049;
-    }
-  }
-`;
-
-const ColorForm = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  position: relative;
-`;
-
-const ColorButton = styled.button`
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-  color: ${props => {
-    // Convert hex color to RGB
-    const r = parseInt(props.style.backgroundColor.slice(1, 3), 16);
-    const g = parseInt(props.style.backgroundColor.slice(3, 5), 16);
-    const b = parseInt(props.style.backgroundColor.slice(5, 7), 16);
-    
-    // Calculate luminance
-    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-    
-    // Return white text for dark colors, black text for light colors
-    return luminance > 0.5 ? '#000000' : '#ffffff';
-  }};
-  
-  &:hover {
-    opacity: 0.9;
-  }
-`;
-
-const ColorPickerWrapper = styled.div`
-  position: absolute;
-  top: -100%;
-  left: 100%;
-  transform: translate(-100%, 0);
-  z-index: 1001;
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transform: scale(1.2);
-  transform-origin: top left;
-  padding: 6px;
-  border: 1px solid #e0e0e0;
-`;
-
-const ColorPickerContainer = styled.div`
-  background: #f8f9fa;
-  border-radius: 8px;
-  padding: 8px;
-  margin-bottom: 0px;
-`;
-
-const ColorPickerButtonContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 4px;
-  width: 100%;
-  padding-right: 8px;
-`;
-
-const ColorPickerButton = styled.button`
-  padding: 3px 6px;
-  border: none;
-  border-radius: 4px;
-  background: #f5f5f5;
-  color: #666;
-  cursor: pointer;
-  font-size: 10px;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: #e0e0e0;
-    color: #333;
-  }
-
-  &:active {
-    background: #dcdcdc;
-  }
-
-  &.primary {
-    background: #4CAF50;
-    color: white;
-
-    &:hover {
-      background: #45a049;
-    }
-
-    &:active {
-      background: #409145;
-    }
-  }
-`;
 
 export default TileLibrary;

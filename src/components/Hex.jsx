@@ -4,7 +4,7 @@ import { useDrag, useDrop } from 'react-dnd';
 import { ItemTypes } from '../constants';
 import { getHexSize, getHexMargin } from '../constants/hexLayout';
 
-const { width, height, contentWidth, contentHeight } = getHexSize();
+const { width, height } = getHexSize();
 const margin = getHexMargin();
 
 const HexContainer = styled.div`
@@ -12,6 +12,7 @@ const HexContainer = styled.div`
   height: ${height}px;
   position: relative;
   margin: ${margin}px;
+  background: black;
   cursor: ${props => props.hasTile ? 'grab' : 'pointer'};
   opacity: ${props => props.isDragging ? 0.5 : 1};
   transform: translate(${props => `${props.offset}px, ${props.verticalOffset}px`});
@@ -23,18 +24,13 @@ const HexContainer = styled.div`
   &:before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: ${props => props.isOver ? (props.hasTile ? '#ffd700' : '#e0e0e0') : '#f0f0f0'};
+    top: 1px;  /* border width */
+    left: 1px;  /* border width */
+    height: calc(100% - 2px);  /* 100% - (2 * border width) */
+    width: calc(100% - 2px);  /* 100% - (2 * border width) */
+    background: ${props => props.isOver ? '#fcf5cc' : '#f0f0f0'};
     clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-    border: 2px solid ${props => props.isOver ? '#ffd700' : '#ddd'};
     transition: all 0.2s ease;
-  }
-
-  &:hover:before {
-    box-shadow: ${props => props.hasTile ? '0 4px 8px rgba(0,0,0,0.1)' : 'none'};
   }
 
   // Ensure the container itself matches the hex shape
@@ -58,9 +54,6 @@ const Interior = styled.div`
   width: 100%;
   height: 100%;
   position: absolute;
-  top: 0;
-  left: 0;
-  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
 `;
 
 const Label = styled.div`
@@ -112,35 +105,7 @@ const Image = styled.img`
   object-position: center;
 `;
 
-const SideLabel = styled.div`
-  position: absolute;
-  font-size: 10px;
-  color: #666;
-  z-index: 2;
-  background: rgba(255, 255, 255, 0.8);
-  padding: 1px 4px;
-  border-radius: 2px;
-  ${props => {
-    switch (props.side) {
-      case 'top':
-        return `top: 0; left: 50%; transform: translateX(-50%);`;
-      case 'topRight':
-        return `top: 25%; right: 0;`;
-      case 'bottomRight':
-        return `bottom: 25%; right: 0;`;
-      case 'bottom':
-        return `bottom: 0; left: 50%; transform: translateX(-50%);`;
-      case 'bottomLeft':
-        return `bottom: 25%; left: 0;`;
-      case 'topLeft':
-        return `top: 25%; left: 0;`;
-      default:
-        return '';
-    }
-  }}
-`;
-
-const Hex = ({ tile, sideLabels = {}, hexId, onMoveTile, offset = 0, verticalOffset = 0 }) => {
+const Hex = ({ tile, hexId, onMoveTile, offset = 0, verticalOffset = 0 }) => {
   const [{ isDragging }, drag] = useDrag({
     type: ItemTypes.HEX_TILE,
     item: () => ({ hexId, tile }),
@@ -187,14 +152,6 @@ const Hex = ({ tile, sideLabels = {}, hexId, onMoveTile, offset = 0, verticalOff
             {tile.text && <Label color={tile.color} className="label">{tile.text}</Label>}
           </Interior>
         )}
-        {Object.entries(sideLabels).map(([side, label]) => (
-          <SideLabel
-            key={side}
-            side={side}
-            label={label}
-            className="side-label"
-          />
-        ))}
       </Content>
     </HexContainer>
   );
