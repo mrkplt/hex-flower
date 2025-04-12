@@ -1,12 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { ItemTypes } from '../constants';
 import Hex from './Hex';
 import TrashZone from './TrashZone';
 import { getFlowerLayout, getHexDimensions } from '../constants/hexLayout';
 import LayoutConfirmation from './LayoutConfirmation';
-
-const { width, height, rowOffset, rowSpacing } = getHexDimensions();
 
 const FlowerContainer = styled.div`
   display: flex;
@@ -69,7 +66,7 @@ const HexFlower = ({ hexes, onHexDrop, onTileDelete, layoutSize }) => {
   };
 
   const layout = getFlowerLayout(layoutSize);
-  const { width, height, rowOffset, rowSpacing } = getHexDimensions();
+  const { height, rowOffset, rowSpacing } = getHexDimensions();
 
   const handleMoveTile = (sourceHexId, targetHexId, tile) => {
     if (sourceHexId === targetHexId) return;
