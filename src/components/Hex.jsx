@@ -16,10 +16,11 @@ const HexContainer = styled.div`
   cursor: ${props => props.hasTile ? 'grab' : 'pointer'};
   opacity: ${props => props.isDragging ? 0.5 : 1};
   transform: translate(${props => `${props.offset}px, ${props.verticalOffset}px`});
+  position: relative;
+  overflow: hidden;
 
   &:active {
     cursor: ${props => props.hasTile ? 'grabbing' : 'pointer'};
-    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
   }
 
   &:before {
@@ -32,13 +33,14 @@ const HexContainer = styled.div`
     background: ${props => props.isOver ? '#6c6' : '#f0f0f0'};
     clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
     transition: all 0.2s ease;
+    pointer-events: ${props => props.isDragging ? 'none' : 'auto'};
   }
 
   &:hover:before {
-    top: 4px;  /* border width */
-    left: 4px;  /* border width */
-    height: calc(100% - 8px);  /* 100% - (2 * border width) */
-    width: calc(100% - 8px);  /* 100% - (2 * border width) */
+    top: 4px;
+    left: 4px;
+    height: calc(100% - 8px);
+    width: calc(100% - 8px);
     background: #6c6;
   }
 
@@ -51,11 +53,8 @@ const Content = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  z-index: 1;
-  overflow: hidden;
   clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
 `;
 
@@ -126,10 +125,10 @@ const ImageContainer = styled.div`
   overflow: hidden;
 
   &:hover {
-    top: 4px;  /* border width */
-    left: 4px;  /* border width */
-    height: calc(100% - 8px);  /* 100% - (2 * border width) */
-    width: calc(100% - 8px);  /* 100% - (2 * border width) */
+    top: 4px;
+    left: 4px;
+    height: calc(100% - 8px);
+    width: calc(100% - 8px);
   }
 `;
 
