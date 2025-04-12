@@ -2,11 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { useDrag } from 'react-dnd';
 import { ItemTypes } from '../constants';
-import { getHexSize } from '../constants/hexLayout';
+import { getHexDimensions } from '../constants/hexLayout';
 import ImageEditor from './ImageEditor';
 import { SketchPicker } from 'react-color';
 
-const { width, height } = getHexSize();
+const { width, height } = getHexDimensions();
 
 const LibraryContainer = styled.div`
   width: 350px;

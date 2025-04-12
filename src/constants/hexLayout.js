@@ -7,12 +7,6 @@ export const HEX_MARGIN = HEX_HEIGHT * 0.4;
 export const ROW_SPACING = HEX_HEIGHT * -1.12; // Distance between rows
 
 // Helper functions
-export const getHexSize = () => ({
-  width: HEX_WIDTH,
-  height: HEX_HEIGHT
-});
-
-export const getHexMargin = () => HEX_MARGIN;
 
 export const LAYOUT_SIZES = {
   SMALL: [1,2, 1, 2, 1],

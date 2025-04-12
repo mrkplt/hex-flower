@@ -2,10 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import { useDrag, useDrop } from 'react-dnd';
 import { ItemTypes } from '../constants';
-import { getHexSize, getHexMargin } from '../constants/hexLayout';
+import { getHexDimensions } from '../constants/hexLayout';
 
-const { width, height } = getHexSize();
-const margin = getHexMargin();
+const { width, height, margin } = getHexDimensions();
 
 const HexContainer = styled.div`
   width: ${width}px;
