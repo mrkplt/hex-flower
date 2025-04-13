@@ -5,7 +5,8 @@ import styled from 'styled-components';
 import HexFlower from './components/HexFlower';
 import TileLibrary from './components/TileLibrary';
 import Toast from './components/Toast';
-import { toSvg } from 'html-to-image';
+import { toSvg, toCanvas } from 'html-to-image';
+import { jsPDF } from "jspdf";
 
 const AppContainer = styled.div`
   display: flex;
@@ -62,6 +63,7 @@ const App = () => {
   const [layoutSize, setLayoutSize] = React.useState('MEDIUM');
   const [showToast, setShowToast] = React.useState(false);
   const [toastMessage, setToastMessage] = React.useState('');
+  const dowloadableElement = document.querySelector('.flower-container');
 
   const handleCreateTile = (newTile) => {
     setTiles(prev => [...prev, newTile]);
@@ -234,20 +236,56 @@ const App = () => {
     }
   };
 
-  const handleDownload = () => {
-    const element = document.querySelector('.flower-container');
-
-    if (element) {
-      toSvg(element)
+  const handleSVGDownload = () => {
+    if (dowloadableElement) {
+      toSvg(dowloadableElement)
         .then((dataUrl) => {
           const link = document.createElement("a");
-          link.download = "hex-flower.png";
+          link.download = "hex-flower.svg";
           link.href = dataUrl;
           link.click();
         })
         .catch((err) => {
           console.error('Error converting to image:', err);
           setToastMessage('Error downloading image');
+          setShowToast(true);
+        });
+    }
+  };
+
+  const handlePDFDownload = () => {
+    if (dowloadableElement) {
+      // Convert directly to canvas
+      toCanvas(dowloadableElement)
+        .then((canvas) => {
+          // Create PDF in landscape orientation
+          const pdf = new jsPDF('l');
+          
+          // Get PDF page dimensions
+          const pdfWidth = pdf.internal.pageSize.getWidth();
+          const pdfHeight = pdf.internal.pageSize.getHeight();
+          
+          // Calculate scaling factor to fit image within PDF page
+          const widthRatio = pdfWidth / canvas.width;
+          const heightRatio = pdfHeight / canvas.height;
+          const scaleFactor = Math.min(widthRatio, heightRatio) * 0.95;
+          
+          // Calculate centered position
+          const x = (pdfWidth - (canvas.width * scaleFactor)) / 2;
+          const y = (pdfHeight - (canvas.height * scaleFactor)) / 2;
+          
+          // Convert canvas to PNG data URL
+          const pngDataUrl = canvas.toDataURL('image/png');
+          
+          // Add image to PDF
+          pdf.addImage(pngDataUrl, 'PNG', x, y, canvas.width * scaleFactor, canvas.height * scaleFactor);
+          
+          // Save the PDF
+          pdf.save('hex-flower.pdf');
+        })
+        .catch((err) => {
+          console.error('Error creating PDF:', err);
+          setToastMessage('Error creating PDF');
           setShowToast(true);
         });
     }
@@ -268,8 +306,11 @@ const App = () => {
           <SaveLoadButton type="button" onClick={(e) => e.currentTarget.previousElementSibling.click()}>
             Load
           </SaveLoadButton>
-          <SaveLoadButton type="button" onClick={handleDownload}>
-            Download
+          <SaveLoadButton type="button" onClick={handleSVGDownload}>
+            SVG
+          </SaveLoadButton>
+          <SaveLoadButton type="button" onClick={handlePDFDownload}>
+            PDF
           </SaveLoadButton>
         </SaveLoadContainer>
         <TileLibrary tiles={tiles} onCreateClick={handleCreateTile} />
