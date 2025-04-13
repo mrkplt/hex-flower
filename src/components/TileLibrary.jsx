@@ -81,7 +81,7 @@ const TileImage = styled.img`
 `;
 
 const TileText = styled.div`
-  font-size: 12px;
+  font-size: 16px;
   word-wrap: break-word;
   z-index: 2;
   position: absolute;

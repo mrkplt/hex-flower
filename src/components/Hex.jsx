@@ -82,7 +82,7 @@ const Interior = styled.div`
 `;
 
 const Label = styled.div`
-  font-size: 12px;
+  font-size: 16px;
   text-align: center;
   word-wrap: break-word;
   max-width: 80%;
