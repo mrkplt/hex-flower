@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { toPng } from 'html-to-image';
 import Hex from './Hex';
 import TrashZone from './TrashZone';
 import { getFlowerLayout, getHexDimensions } from '../constants/hexLayout';
@@ -47,19 +46,6 @@ const HexFlower = ({ hexes, onHexDrop, onTileDelete, layoutSize }) => {
   const elementRef = React.useRef(null);
   const [showConfirmation, setShowConfirmation] = React.useState(false);
   const [pendingLayout, setPendingLayout] = React.useState(null);
-
-  const htmlToImageConvert = () => {
-    toPng(elementRef.current, { cacheBust: false })
-      .then((dataUrl) => {
-        const link = document.createElement("a");
-        link.download = "hex-flower.png";
-        link.href = dataUrl;
-        link.click();
-      })
-      .catch((err) => {
-        console.error('Error converting to image:', err);
-      });
-  };
 
   const handleLayoutChange = (size) => {
     // Check if any hex has a tile
@@ -114,33 +100,6 @@ const HexFlower = ({ hexes, onHexDrop, onTileDelete, layoutSize }) => {
           </HexRow>
         ))}
       </FlowerContainer>
-      <div style={{
-        position: 'fixed',
-        bottom: '20px',
-        right: '20px',
-        zIndex: 1000
-      }}>
-        <button 
-          onClick={htmlToImageConvert} 
-          className="download-button"
-          style={{
-            padding: '10px 20px',
-            backgroundColor: '#2196F3',
-            color: 'white',
-            border: 'none',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            fontSize: '16px',
-            fontWeight: 'bold',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-            transition: 'transform 0.2s'
-          }}
-          onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
-          onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
-        >
-          Download Image
-        </button>
-      </div>
       <TrashZone onTileDelete={onTileDelete} />
 
       <LayoutToggleContainer>

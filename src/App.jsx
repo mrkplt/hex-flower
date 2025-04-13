@@ -4,8 +4,8 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import styled from 'styled-components';
 import HexFlower from './components/HexFlower';
 import TileLibrary from './components/TileLibrary';
-import { v4 as uuidv4 } from 'uuid';
 import Toast from './components/Toast';
+import { toPng } from 'html-to-image';
 
 const AppContainer = styled.div`
   display: flex;
@@ -34,7 +34,7 @@ const SaveLoadButton = styled.button`
   padding: 8px;
   border: none;
   border-radius: 4px;
-  background: ${props => props.type === 'save' ? '#4CAF50' : '#2196F3'};
+  background: ${props => props.type === 'save' ? '#4CAF50' : props.type === 'download' ? '#2196F3' : props.type === 'load' ? '#4285F4' : '#4285F4'};
   color: white;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -42,12 +42,12 @@ const SaveLoadButton = styled.button`
   font-size: 14px;
 
   &:hover {
-    background: ${props => props.type === 'save' ? '#4CAF50' : '#1976D2'};
+    background: ${props => props.type === 'save' ? '#4CAF50' : props.type === 'download' ? '#1976D2' : props.type === 'load' ? '#357ABE' : '#357ABE'};
   }
 
   &:focus,
   &:focus-visible {
-    outline: 2px solid ${props => props.type === 'save' ? '#4CAF50' : '#1976D2'};
+    outline: 2px solid ${props => props.type === 'save' ? '#4CAF50' : props.type === 'download' ? '#1976D2' : props.type === 'load' ? '#357ABE' : '#357ABE'};
     outline-offset: 2px;
   }
 `;
@@ -234,6 +234,24 @@ const App = () => {
     }
   };
 
+  const handleDownload = () => {
+    const element = document.querySelector('.hex-flower');
+    if (element) {
+      toPng(element, { cacheBust: false })
+        .then((dataUrl) => {
+          const link = document.createElement("a");
+          link.download = "hex-flower.png";
+          link.href = dataUrl;
+          link.click();
+        })
+        .catch((err) => {
+          console.error('Error converting to image:', err);
+          setToastMessage('Error downloading image');
+          setShowToast(true);
+        });
+    }
+  };
+
   return (
     <DndProvider backend={HTML5Backend}>
       <AppContainer>
@@ -249,8 +267,8 @@ const App = () => {
           <SaveLoadButton type="button" onClick={(e) => e.currentTarget.previousElementSibling.click()}>
             Load
           </SaveLoadButton>
-          <SaveLoadButton type="button" onClick={() => window.print()}>
-            Print
+          <SaveLoadButton type="button" onClick={handleDownload}>
+            Download
           </SaveLoadButton>
         </SaveLoadContainer>
         <TileLibrary tiles={tiles} onCreateClick={handleCreateTile} />

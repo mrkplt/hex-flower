@@ -89,10 +89,15 @@ const TileText = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   color: ${props => {
+    // Convert hex color to RGB
     const r = parseInt(props.color.slice(1, 3), 16);
     const g = parseInt(props.color.slice(3, 5), 16);
     const b = parseInt(props.color.slice(5, 7), 16);
+    
+    // Calculate luminance
     const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    
+    // Return white text for dark colors, black text for light colors
     return luminance > 0.5 ? '#000000' : '#ffffff';
   }};
   text-align: center;
