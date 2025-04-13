@@ -235,7 +235,8 @@ const App = () => {
   };
 
   const handleDownload = () => {
-    const element = document.querySelector('.hex-flower');
+    const element = document.querySelector('.flower-container');
+
     if (element) {
       toPng(element, { cacheBust: false })
         .then((dataUrl) => {
