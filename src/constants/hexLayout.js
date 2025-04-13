@@ -1,13 +1,11 @@
 // Hex dimensions and calculations
-export const HEX_HEIGHT = 90; // Base height of the hexagon
-export const HEX_WIDTH = HEX_HEIGHT * 1.1547; 
-export const HEX_MARGIN = HEX_HEIGHT * 0.4; 
-
-// Layout calculations
-export const ROW_SPACING = HEX_HEIGHT * -1.12; // Distance between rows
+const HEX_SPACING = 5
+export const HEX_HEIGHT = 115; // Base height of the hexagon
+export const HEX_WIDTH = (2/Math.sqrt(3)) * HEX_HEIGHT; 
+export const HEX_MARGIN = HEX_WIDTH * 0.248 + HEX_SPACING;
+export const ROW_SPACING = -(HEX_HEIGHT * 0.752 - HEX_SPACING * 0.3); // Distance between rows
 
 // Helper functions
-
 export const LAYOUT_SIZES = {
   SMALL: [1,2, 1, 2, 1],
   MEDIUM: [1, 2, 3, 2, 3, 2, 3, 2, 1],

@@ -17,7 +17,6 @@ const FlowerContainer = styled.div`
 
 const HexRow = styled.div`
   display: flex;
-  margin-bottom: ${rowSpacing}px;
 `;
 
 const LayoutToggleContainer = styled.div`
@@ -95,7 +94,7 @@ const HexFlower = ({ hexes, onHexDrop, onTileDelete, layoutSize }) => {
                   hexId={hexId}
                   tile={tile}
                   onMoveTile={handleMoveTile}
-                  verticalOffset={rowIndex * (height + rowSpacing)}
+                  verticalOffset={rowIndex * (height + (2 * rowSpacing))}
                   className="hex-container"
                 />
               );

@@ -10,8 +10,12 @@ const HexContainer = styled.div`
   width: ${width}px;
   height: ${height}px;
   position: relative;
-  margin: ${margin}px;
+  margin-left: ${margin}px;
+  margin-right: ${margin}px;
+  margin-top: 0px;
+  margin-bottom: 0px;
   background: black;
+  padding: 0px;
   cursor: ${props => props.hasTile ? 'grab' : 'pointer'};
   opacity: ${props => props.isDragging ? 0.5 : 1};
   transform: translate(${props => `${props.offset}px, ${props.verticalOffset}px`});
