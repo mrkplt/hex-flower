@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import HexFlower from './components/HexFlower';
 import TileLibrary from './components/TileLibrary';
 import Toast from './components/Toast';
-import { toPng } from 'html-to-image';
+import { toSvg } from 'html-to-image';
 
 const AppContainer = styled.div`
   display: flex;
@@ -238,7 +238,7 @@ const App = () => {
     const element = document.querySelector('.flower-container');
 
     if (element) {
-      toPng(element, { cacheBust: false })
+      toSvg(element)
         .then((dataUrl) => {
           const link = document.createElement("a");
           link.download = "hex-flower.png";
