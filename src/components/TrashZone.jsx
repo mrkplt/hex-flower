@@ -19,9 +19,8 @@ const TrashZoneContainer = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
-    background: ${props => props.isOver ? '#ff0000' : '#FF9999'};
+    background: ${props => props.isOver ? '#ff0000' : '#FF5555'};
     clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-    border: 2px dashed ${props => props.isOver ? '#ff0000' : '#FF9999'};
   }
 
   &::after {
