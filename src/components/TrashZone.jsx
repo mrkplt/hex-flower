@@ -36,11 +36,13 @@ const TrashZoneContainer = styled.div`
 
 const TrashZone = ({ onTileDelete }) => {
   const [{ isOver }, drop] = useDrop({
-    accept: ItemTypes.HEX_TILE,
+    accept: [ItemTypes.HEX_TILE, ItemTypes.LIBRARY_TILE],
     drop: (item, monitor) => {
-      if (item.hexId) {
-        onTileDelete(item.hexId);
+      const id = item.hexId || item.tile?.id;
+      if (id) {
+        onTileDelete(id);
       }
+      return { didDrop: true };
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),

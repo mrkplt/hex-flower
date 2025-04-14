@@ -120,17 +120,24 @@ const App = () => {
     });
   };
 
-  const handleTileDelete = (hexId) => {
-    setHexes(prev => {
-      const newHexes = { ...prev };
-      if (newHexes[hexId]) {
-        newHexes[hexId] = {
-          ...newHexes[hexId],
-          tile: null
-        };
-      }
-      return newHexes;
-    });
+  const handleTileDelete = (id) => {
+    // Check if this is a hex tile ID
+    if (Object.keys(hexes).includes(id)) {
+      // This is a hex tile ID
+      setHexes(prev => {
+        const newHexes = { ...prev };
+        if (newHexes[id]) {
+          newHexes[id] = {
+            ...newHexes[id],
+            tile: null
+          };
+        }
+        return newHexes;
+      });
+    } else {
+      // This is a library tile ID
+      setTiles(prev => prev.filter(tile => tile.id !== id));
+    }
   };
 
   const handleSave = async () => {
@@ -313,7 +320,11 @@ const App = () => {
             PDF
           </SaveLoadButton>
         </SaveLoadContainer>
-        <TileLibrary tiles={tiles} onCreateClick={handleCreateTile} />
+        <TileLibrary 
+          tiles={tiles} 
+          onCreateClick={handleCreateTile}
+          onTileDelete={handleTileDelete}
+        />
         <MainContent>
           <HexFlower 
             hexes={hexes}

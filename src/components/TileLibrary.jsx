@@ -317,14 +317,14 @@ const ColorPickerButton = styled.button`
   }
 `;
 
-const DraggableTile = ({ tile }) => {
-  const [{ isDragging }, drag] = useDrag(() => ({
+const DraggableTile = ({ tile, onTileDelete }) => {
+  const [{ isDragging }, drag] = useDrag({
     type: ItemTypes.LIBRARY_TILE,
     item: { tile },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
-  }));
+  });
 
   return (
     <Tile ref={drag} isDragging={isDragging}>
@@ -441,7 +441,7 @@ const CreateTileDialog = ({ onClose }) => {
   );
 };
 
-const TileLibrary = ({ tiles, onCreateClick }) => {
+const TileLibrary = ({ tiles, onCreateClick, onTileDelete }) => {
   const [showDialog, setShowDialog] = React.useState(false);
   const [showEditor, setShowEditor] = React.useState(false);
   const [imageFile, setImageFile] = React.useState(null);
@@ -498,7 +498,7 @@ const TileLibrary = ({ tiles, onCreateClick }) => {
       )}
       <TileContainer>
         {tiles.map((tile) => (
-          <DraggableTile key={tile.id} tile={tile} />
+          <DraggableTile key={tile.id} tile={tile} onTileDelete={onTileDelete} />
         ))}
       </TileContainer>
     </LibraryContainer>
