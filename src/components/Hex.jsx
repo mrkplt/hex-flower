@@ -189,7 +189,7 @@ const Hex = ({ tile, hexId, onMoveTile, offset = 0, verticalOffset = 0 }) => {
             }
             {tile.image && (
               <ImageContainer className="image-container">
-                <Image src={tile.image} alt={tile.text || 'Tile image'} className="image"/>
+                <Image src={tile.image} alt={tile.text || 'Tile image'} className="image" style={{ backgroundColor: tile.color }}/>
                 {tile.text && <Label color={tile.color} className="label">{tile.text}</Label>}
               </ImageContainer>
             )}
