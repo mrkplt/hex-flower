@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import HexFlower from './components/HexFlower';
 import TileLibrary from './components/TileLibrary';
 import Toast from './components/Toast';
+import ConfirmationDialog from './components/ConfirmationDialog';
 import { toSvg, toCanvas } from 'html-to-image';
 import { jsPDF } from "jspdf";
 
@@ -63,6 +64,8 @@ const App = () => {
   const [layoutSize, setLayoutSize] = React.useState('MEDIUM');
   const [showToast, setShowToast] = React.useState(false);
   const [toastMessage, setToastMessage] = React.useState('');
+  const [showConfirmation, setShowConfirmation] = React.useState(false);
+  const [tileToDelete, setTileToDelete] = React.useState(null);
   const dowloadableElement = document.querySelector('.flower-container');
 
   const handleCreateTile = (newTile) => {
@@ -136,8 +139,45 @@ const App = () => {
       });
     } else {
       // This is a library tile ID
-      setTiles(prev => prev.filter(tile => tile.id !== id));
+      // Check if the tile has instances in the hex grid
+      const hasInstances = Object.values(hexes).some(hex => hex.tile?.id === id);
+      
+      if (hasInstances) {
+        setTileToDelete(id);
+        setShowConfirmation(true);
+      } else {
+        // No instances, just delete the library tile
+        setTiles(prev => prev.filter(tile => tile.id !== id));
+      }
     }
+  };
+
+  const handleConfirmDelete = () => {
+    if (tileToDelete) {
+      // Remove from library
+      setTiles(prev => prev.filter(tile => tile.id !== tileToDelete));
+      
+      // Remove all instances from hex grid
+      setHexes(prev => {
+        const newHexes = { ...prev };
+        Object.keys(newHexes).forEach(hexId => {
+          if (newHexes[hexId]?.tile?.id === tileToDelete) {
+            newHexes[hexId] = {
+              ...newHexes[hexId],
+              tile: null
+            };
+          }
+        });
+        return newHexes;
+      });
+    }
+    setShowConfirmation(false);
+    setTileToDelete(null);
+  };
+
+  const handleCancelDelete = () => {
+    setShowConfirmation(false);
+    setTileToDelete(null);
   };
 
   const handleSave = async () => {
@@ -333,6 +373,12 @@ const App = () => {
             layoutSize={layoutSize}
           />
         </MainContent>
+        <ConfirmationDialog
+          isOpen={showConfirmation}
+          message="This tile has instances in the hex grid. Are you sure you want to delete all instances?"
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
+        />
         {showToast && (
           <Toast message={toastMessage} onClose={() => setShowToast(false)} />
         )}
