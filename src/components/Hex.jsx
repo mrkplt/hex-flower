@@ -16,9 +16,9 @@ const HexContainer = styled.div`
   margin-bottom: 0px;
   background: black;
   padding: 0px;
-  cursor: ${props => props.hasTile ? 'grab' : 'pointer'};
-  opacity: ${props => props.isDragging ? 0.5 : 1};
-  transform: translate(${props => `${props.offset}px, ${props.verticalOffset}px`});
+  cursor: ${props => props.$hasTile ? 'grab' : 'pointer'};
+  opacity: ${props => props.$isDragging ? 0.5 : 1};
+  transform: translate(${props => `${props.$offset}px, ${props.$verticalOffset}px`});
   position: relative;
   overflow: hidden;
 
@@ -29,14 +29,14 @@ const HexContainer = styled.div`
   &:before {
     content: '';
     position: absolute;
-    top: ${props => props.isOver ? 4 : 1}px;
-    left: ${props => props.isOver ? 4 : 1}px;
-    height: calc(100% - ${props => props.isOver ? '8px' : '2px'});
-    width: calc(100% - ${props => props.isOver ? '8px' : '2px'});
-    background: ${props => props.isOver ? '#6c6' : '#f0f0f0'};
+    top: ${props => props.$isOver ? 4 : 1}px;
+    left: ${props => props.$isOver ? 4 : 1}px;
+    height: calc(100% - ${props => props.$isOver ? '8px' : '2px'});
+    width: calc(100% - ${props => props.$isOver ? '8px' : '2px'});
+    background: ${props => props.$isOver ? '#6c6' : '#f0f0f0'};
     clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
     transition: all 0.2s ease;
-    pointer-events: ${props => props.isDragging ? 'none' : 'auto'};
+    pointer-events: ${props => props.$isDragging ? 'none' : 'auto'};
   }
 
   &:hover:before {
@@ -174,11 +174,11 @@ const Hex = ({ tile, hexId, onMoveTile, offset = 0, verticalOffset = 0 }) => {
     <HexContainer
       className="hex-container"
       ref={ref}
-      hasTile={!!tile}
-      isDragging={isDragging}
-      isOver={isOver}
-      offset={offset}
-      verticalOffset={verticalOffset}
+      $hasTile={!!tile}
+      $isDragging={isDragging}
+      $isOver={isOver}
+      $offset={offset}
+      $verticalOffset={verticalOffset}
     >
       <Content className="hex-content">
         {tile && (

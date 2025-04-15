@@ -9,7 +9,7 @@ const TrashZoneContainer = styled.div`
   right: 20px;
   width: 120px;
   height: 138.568px;
-  transform: ${props => props.isOver ? 'scale(1.15)' : 'scale(1)'};
+  transform: ${props => props.$isOver ? 'scale(1.15)' : 'scale(1)'};
   transition: all 0.2s ease;
 
   &::before {
@@ -19,7 +19,7 @@ const TrashZoneContainer = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
-    background: ${props => props.isOver ? '#ff0000' : '#FF5555'};
+    background: ${props => props.$isOver ? '#ff0000' : '#FF5555'};
     clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   }
 
@@ -49,7 +49,7 @@ const TrashZone = ({ onTileDelete }) => {
     }),
   });
 
-  return <TrashZoneContainer ref={drop} isOver={isOver} />;
+  return <TrashZoneContainer ref={drop} $isOver={isOver} />;
 };
 
 export default TrashZone;

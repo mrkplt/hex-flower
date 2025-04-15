@@ -30,15 +30,15 @@ const LayoutToggle = styled.button`
   padding: 8px;
   border: none;
   border-radius: 4px;
-  background: ${props => props.isActive ? '#4CAF50' : '#f0f0f0'};
-  color: ${props => props.isActive ? 'white' : '#333'};
+  background: ${props => props.$isActive ? '#4CAF50' : '#f0f0f0'};
+  color: ${props => props.$isActive ? 'white' : '#333'};
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: center;
   font-size: 14px;
 
   &:hover {
-    background: ${props => props.isActive ? '#4CAF50' : '#e0e0e0'};
+    background: ${props => props.$isActive ? '#4CAF50' : '#e0e0e0'};
   }
 `;
 
@@ -104,19 +104,19 @@ const HexFlower = ({ hexes, onHexDrop, onTileDelete, layoutSize }) => {
 
       <LayoutToggleContainer>
         <LayoutToggle 
-          isActive={layoutSize === 'SMALL'}
+          $isActive={layoutSize === 'SMALL'}
           onClick={() => handleLayoutChange('SMALL')}
         >
           Small
         </LayoutToggle>
         <LayoutToggle 
-          isActive={layoutSize === 'MEDIUM'}
+          $isActive={layoutSize === 'MEDIUM'}
           onClick={() => handleLayoutChange('MEDIUM')}
         >
           Medium
         </LayoutToggle>
         <LayoutToggle 
-          isActive={layoutSize === 'LARGE'}
+          $isActive={layoutSize === 'LARGE'}
           onClick={() => handleLayoutChange('LARGE')}
         >
           Large
