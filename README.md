@@ -1,8 +1,9 @@
 # Hex Flower App
 
-A React-based application for creating and managing Hex Flowers, inspired by the [Hex Flower Power concept](https://goblinshenchman.wordpress.com/hex-power-flower/). This tool allows users to build hex flowers with a drag-and-drop interface.
+A React-based application for creating and managing Hex Flowers, inspired by the [Hex Flower Power concept](https://goblinshenchman.wordpress.com/hex-power-flower/). This tool allows users to build hex flowers with a drag-and-drop interface. This entire application was developed by myself and Cascade in Windsurf as an exercise in learning how to talk with agentic AI. The code is not production ready for whatever definition of production you may use.
 
-This entire application was developed by Windsurf, Cascade, and myself as an exercise in learning how to talk with agentic AI. The code is not production ready for whatever definition of production you may use. I also have no idea if it's well architected, I didn't really look at it, and I'm not great with React anyway. Some of the notes in here are to make prompting easier during development by providing context.
+## Helpful Links:
+[https://game-icons.net/](https://game-icons.net/)
 
 ## Features
 
@@ -85,10 +86,6 @@ npm run preview
    - Save your work using the Save button
    - Export your hexflower as an SVG or PDF
 
-## Usage
-
-
-
 3. **Save/Load**:
    - Click the Save button to save your current configuration
    - Click the Load button to load a saved configuration
@@ -102,3 +99,8 @@ npm run preview
 [![License: CC BY-NC-SA 4.0](https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png)](https://creativecommons.org/licenses/by-nc-sa/4.0/) CC BY-NC-SA 4.0
 
 ## Contributing
+
+
+## Known Issues
+  - "Safe Clearing" line breaks in Hex but not in library
+  - The flow for creating a tile is a little clunky. It would be nice if you uploaded an image you could choose the color after to get a preview on the resize.
