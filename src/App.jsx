@@ -16,6 +16,29 @@ const AppContainer = styled.div`
   position: relative;
 `;
 
+const InfoButton = styled.a`
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #4CAF50;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #6c6;
+    transform: scale(1.1);
+  }
+`;
+
 const MainContent = styled.div`
   flex: 1;
   overflow: hidden;
@@ -359,6 +382,14 @@ const App = () => {
           <SaveLoadButton type="button" onClick={handlePDFDownload}>
             PDF
           </SaveLoadButton>
+          <InfoButton 
+            href="https://github.com/mrkplt/hex-flower" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            title="Github"
+          >
+            i
+          </InfoButton>
         </SaveLoadContainer>
         <TileLibrary 
           tiles={tiles} 
