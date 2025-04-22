@@ -108,21 +108,22 @@ const CropperWrapper = styled.div`
   margin: 0 auto 16px auto;
   > div {
     width: 100% !important;
-    height: 260px !important;
+    // height: 260px !important;
   }
 `;
 const Controls = styled.div`
   display: flex;
   gap: 10px;
   justify-content: center;
-  padding: 10px 0 0 0;
+  padding: 20px 0 0 0;
 `;
-const TextArea = styled.textarea`
+const TextField = styled.input`
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  min-height: 64px;
-  resize: vertical;
+  min-height: 40px;
+  font-size: 1rem;
+  width: 100%;
 `;
 const ButtonGroup = styled.div`
   display: flex;
@@ -154,6 +155,38 @@ const Error = styled.div`
   border-radius: 4px;
   margin-top: 10px;
   text-align: center;
+`;
+const FormRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 14px;
+`;
+const FormLabel = styled(Label)`
+  min-width: 120px;
+  margin-bottom: 0;
+`;
+const CropperActionButton = styled.button`
+  width: 110px;
+  height: 38px;
+  padding: 8px 0;
+  border: none;
+  border-radius: 4px;
+  background: #f0f0f0;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  font-size: 14px;
+  margin-right: 10px;
+  &:hover {
+    background: #e0e0e0;
+  }
+  &.primary {
+    background: #4CAF50;
+    color: white;
+    &:hover { background: #45a049; }
+  }
 `;
 
 const TileCreator = ({ isOpen, onClose, onSave }) => {
@@ -287,33 +320,7 @@ const TileCreator = ({ isOpen, onClose, onSave }) => {
     <Modal onClick={handleCancel}>
       <ModalContent onClick={e => e.stopPropagation()}>
         <Form onSubmit={handleSubmit}>
-          <Label>Preview</Label>
-          <HexPreview color={color}>
-            {isCropping && liveCropImage && <PreviewImage src={liveCropImage} alt="Tile" />}
-            {isCropping && !liveCropImage && imageURL && <PreviewImage src={imageURL} alt="Tile" />}
-            {!isCropping && croppedImage && <PreviewImage src={croppedImage} alt="Tile" />}
-            {!isCropping && !croppedImage && imageURL && <PreviewImage src={imageURL} alt="Tile" style={{ opacity: imageURL ? 1 : 0 }} />}
-            {text && <PreviewText bg={color}>{text}</PreviewText>}
-          </HexPreview>
-
-          <ColorRow>
-            <Label>Background Color</Label>
-            <ColorPreview color={color} onClick={() => setShowColorPicker(v => !v)} title="Pick color" />
-            {showColorPicker && (
-              <div style={{ position: 'absolute', zIndex: 2000, left: 170 }}>
-                <SketchPicker color={color} onChange={c => setColor(c.hex)} />
-              </div>
-            )}
-          </ColorRow>
-
-          <Label>Tile Text</Label>
-          <TextArea
-            placeholder="Enter tile description..."
-            value={text}
-            onChange={e => setText(e.target.value)}
-          />
-
-          {!imageFile && (
+        {!imageFile && (
             <DropZone
               onDrop={handleDrop}
               onDragOver={handleDragOver}
@@ -351,12 +358,12 @@ const TileCreator = ({ isOpen, onClose, onSave }) => {
                 style={{ width: '100%', height: 260 }}
               />
               <Controls>
-                <Button type="button" className="secondary" onClick={() => handleRotate('left')} title="Rotate Left">&#x21B6;</Button>
-                <Button type="button" className="secondary" onClick={() => handleRotate('right')} title="Rotate Right">&#x21B7;</Button>
-                <Button type="button" className="secondary" onClick={() => handleZoom('in')} title="Zoom In">&#x2B05;</Button>
-                <Button type="button" className="secondary" onClick={() => handleZoom('out')} title="Zoom Out">&#x27A1;</Button>
-                <Button type="button" className="primary" onClick={handleCrop}>Crop</Button>
-                <Button type="button" className="secondary" onClick={handleRemoveImage}>Remove Image</Button>
+                <CropperActionButton type="button" onClick={() => handleRotate('left')} title="Rotate Left">&#x21B6;</CropperActionButton>
+                <CropperActionButton type="button" onClick={() => handleRotate('right')} title="Rotate Right">&#x21B7;</CropperActionButton>
+                <CropperActionButton type="button" onClick={() => handleZoom('in')} title="Zoom In">&#x2B05;</CropperActionButton>
+                <CropperActionButton type="button" onClick={() => handleZoom('out')} title="Zoom Out">&#x27A1;</CropperActionButton>
+                <CropperActionButton type="button" className="primary" onClick={handleCrop}>Crop</CropperActionButton>
+                <CropperActionButton type="button" onClick={handleRemoveImage}>Remove Image</CropperActionButton>
               </Controls>
               {error && <Error>{error}</Error>}
             </CropperWrapper>
@@ -368,7 +375,34 @@ const TileCreator = ({ isOpen, onClose, onSave }) => {
               Remove Image
             </Button>
           )}
+          <FormRow>
+            <FormLabel>Tile Text:</FormLabel>
+            <TextField
+              type="text"
+              placeholder="Enter tile text..."
+              value={text}
+              onChange={e => setText(e.target.value)}
+              maxLength={100}
+            />
+          </FormRow>
+          <FormRow>
+            <FormLabel>Background Color:</FormLabel>
+            <ColorPreview color={color} onClick={() => setShowColorPicker(v => !v)} title="Pick color" />
+            {showColorPicker && (
+              <div style={{ position: 'absolute', zIndex: 2000, left: 170 }}>
+                <SketchPicker color={color} onChange={c => setColor(c.hex)} />
+              </div>
+            )}
+          </FormRow>
 
+          <Label>Preview:</Label>
+          <HexPreview color={color}>
+            {isCropping && liveCropImage && <PreviewImage src={liveCropImage} alt="Tile" />}
+            {isCropping && !liveCropImage && imageURL && <PreviewImage src={imageURL} alt="Tile" />}
+            {!isCropping && croppedImage && <PreviewImage src={croppedImage} alt="Tile" />}
+            {!isCropping && !croppedImage && imageURL && <PreviewImage src={imageURL} alt="Tile" style={{ opacity: imageURL ? 1 : 0 }} />}
+            {text && <PreviewText bg={color}>{text}</PreviewText>}
+          </HexPreview>
           <ButtonGroup>
             <Button type="button" className="secondary" onClick={handleCancel}>
               Cancel
