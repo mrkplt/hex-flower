@@ -158,9 +158,10 @@ const CropperWrapper = styled.div`
 `;
 const Controls = styled.div`
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   justify-content: center;
-  padding: 20px 0 0 0;
+  padding: 20px 0 10px 0;
 `;
 const TextField = styled.input`
   padding: 8px;
@@ -212,25 +213,39 @@ const FormLabel = styled(Label)`
   margin-bottom: 0;
 `;
 const CropperActionButton = styled.button`
-  width: 110px;
+  min-width: 40px;
   height: 38px;
-  padding: 8px 0;
+  padding: 8px 12px;
   border: none;
   border-radius: 4px;
-  background: #f0f0f0;
+  background: #f5f5f5;
   color: #333;
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: center;
-  font-size: 14px;
-  margin-right: 10px;
+  font-size: 1rem;
+  margin-right: 8px;
+  border: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
   &:hover {
-    background: #e0e0e0;
+    background: #e5e5e5;
   }
+  
   &.primary {
     background: #4CAF50;
     color: white;
+    border: none;
     &:hover { background: #45a049; }
+  }
+  
+  &.danger {
+    background: #f44336;
+    color: white;
+    border: none;
+    &:hover { background: #d32f2f; }
   }
 `;
 
@@ -418,11 +433,11 @@ const TileCreator = ({ isOpen, onClose, onSave }) => {
                 style={{ width: '100%', height: 260 }}
               />
               <Controls>
-                <CropperActionButton type="button" onClick={() => handleRotate('left')} title="Rotate Left">&#x21B6;</CropperActionButton>
-                <CropperActionButton type="button" onClick={() => handleRotate('right')} title="Rotate Right">&#x21B7;</CropperActionButton>
-                <CropperActionButton type="button" onClick={() => handleZoom('in')} title="Zoom In">&#x2B05;</CropperActionButton>
-                <CropperActionButton type="button" onClick={() => handleZoom('out')} title="Zoom Out">&#x27A1;</CropperActionButton>
-                <CropperActionButton type="button" onClick={handleRemoveImage}>Remove Image</CropperActionButton>
+                <CropperActionButton type="button" onClick={() => handleRotate('left')} title="Rotate Left">↺</CropperActionButton>
+                <CropperActionButton type="button" onClick={() => handleRotate('right')} title="Rotate Right">↻</CropperActionButton>
+                <CropperActionButton type="button" onClick={() => handleZoom('in')} title="Zoom In">+</CropperActionButton>
+                <CropperActionButton type="button" onClick={() => handleZoom('out')} title="Zoom Out">-</CropperActionButton>
+                <CropperActionButton type="button" className="danger" onClick={handleRemoveImage}>Remove</CropperActionButton>
               </Controls>
               {error && <Error>{error}</Error>}
             </CropperWrapper>
