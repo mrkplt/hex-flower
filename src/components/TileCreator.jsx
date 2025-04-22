@@ -315,10 +315,21 @@ const TileCreator = ({ isOpen, onClose, onSave }) => {
     setError(null);
   };
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') {
+        handleCancel();
+      }
+    };
+    window.addEventListener('keyup', handleEsc);
+    return () => window.removeEventListener('keyup', handleEsc);
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
-    <Modal onClick={handleCancel}>
+    <Modal>
       <ModalContent onClick={e => e.stopPropagation()}>
         <Form onSubmit={handleSubmit}>
         {!imageFile && (
