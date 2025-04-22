@@ -23,16 +23,18 @@ const Modal = styled.div`
 `;
 const ModalContent = styled.div`
   background: white;
-  padding: 32px 24px 24px 24px;
+  padding: 28px 24px 24px 24px;
   border-radius: 12px;
   width: 430px;
   max-width: 95vw;
   box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  max-height: 90vh;
+  overflow-y: auto;
 `;
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 12px;
 `;
 const Label = styled.label`
   font-weight: 500;
@@ -135,14 +137,14 @@ const PreviewText = styled.div`
 `;
 const DropZone = styled.div`
   border: 2px dashed #bbb;
-  border-radius: 10px;
-  padding: 24px;
+  border-radius: 8px;
+  padding: 14px;
   text-align: center;
   color: #888;
   background: #fafbfc;
   cursor: pointer;
   transition: border 0.2s;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   &:hover {
     border-color: #4caf50;
     color: #333;
@@ -150,7 +152,7 @@ const DropZone = styled.div`
 `;
 const CropperWrapper = styled.div`
   width: 100%;
-  margin: 0 auto 16px auto;
+  margin: 0 auto 8px auto;
   > div {
     width: 100% !important;
     // height: 260px !important;
@@ -159,9 +161,9 @@ const CropperWrapper = styled.div`
 const Controls = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
   justify-content: center;
-  padding: 20px 0 10px 0;
+  padding: 10px 0 5px 0;
 `;
 const TextField = styled.input`
   padding: 8px;
@@ -174,11 +176,11 @@ const TextField = styled.input`
 const ButtonGroup = styled.div`
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
-  margin-top: 12px;
+  gap: 8px;
+  margin-top: 8px;
 `;
 const Button = styled.button`
-  padding: 8px 18px;
+  padding: 6px 16px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -196,26 +198,31 @@ const Button = styled.button`
 `;
 const Error = styled.div`
   color: #f44336;
-  padding: 8px;
+  padding: 6px;
   background: #ffebee;
   border-radius: 4px;
-  margin-top: 10px;
+  margin-top: 6px;
   text-align: center;
+  font-size: 0.9rem;
 `;
 const FormRow = styled.div`
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 14px;
+  gap: 12px;
+  margin-bottom: 6px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
 `;
 const FormLabel = styled(Label)`
   min-width: 120px;
   margin-bottom: 0;
 `;
 const CropperActionButton = styled.button`
-  min-width: 40px;
-  height: 38px;
-  padding: 8px 12px;
+  min-width: 36px;
+  height: 32px;
+  padding: 8px 18px;
   border: none;
   border-radius: 4px;
   background: #f5f5f5;
@@ -223,8 +230,8 @@ const CropperActionButton = styled.button`
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: center;
-  font-size: 1rem;
-  margin-right: 8px;
+  font-size: 0.9rem;
+  margin-right: 4px;
   border: 1px solid #ddd;
   display: flex;
   align-items: center;
@@ -246,6 +253,33 @@ const CropperActionButton = styled.button`
     color: white;
     border: none;
     &:hover { background: #d32f2f; }
+  }
+`;
+
+const FormSection = styled.div`
+  margin-bottom: 10px;
+  background: #f9f9f9;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  
+  > *:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+const PreviewSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0px;
+  padding: 12px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  
+  > *:last-child {
+    margin-bottom: 0;
   }
 `;
 
@@ -394,94 +428,98 @@ const TileCreator = ({ isOpen, onClose, onSave }) => {
     <Modal>
       <ModalContent onClick={e => e.stopPropagation()}>
         <Form onSubmit={handleSubmit}>
-        {!imageFile && (
-            <DropZone
-              onDrop={handleDrop}
-              onDragOver={handleDragOver}
-              onClick={() => fileInputRef.current && fileInputRef.current.click()}
-              tabIndex={0}
-              role="button"
-              aria-label="Add image"
-            >
-              Drag & drop an image here, or click to select
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                style={{ display: 'none' }}
-                onChange={handleFileChange}
-              />
-            </DropZone>
-          )}
-
-          {/* Cropper UI */}
-          {isCropping && imageURL && (
-            <CropperWrapper>
-              <Cropper
-                ref={cropperRef}
-                src={imageURL}
-                crossOrigin="anonymous"
-                aspectRatio={1}
-                viewMode={1}
-                guides={true}
-                autoCropArea={1}
-                background={false}
-                responsive={true}
-                dragMode="move"
-                cropBoxResizable={true}
-                cropBoxMovable={true}
-                style={{ width: '100%', height: 260 }}
-              />
-              <Controls>
-                <CropperActionButton type="button" onClick={() => handleRotate('left')} title="Rotate Left">↺</CropperActionButton>
-                <CropperActionButton type="button" onClick={() => handleRotate('right')} title="Rotate Right">↻</CropperActionButton>
-                <CropperActionButton type="button" onClick={() => handleZoom('in')} title="Zoom In">+</CropperActionButton>
-                <CropperActionButton type="button" onClick={() => handleZoom('out')} title="Zoom Out">-</CropperActionButton>
-                <CropperActionButton type="button" className="danger" onClick={handleRemoveImage}>Remove</CropperActionButton>
-              </Controls>
-              {error && <Error>{error}</Error>}
-            </CropperWrapper>
-          )}
-
-          {/* Remove image button after crop */}
-          {croppedImage && (
-            <Button type="button" className="secondary" onClick={handleRemoveImage} style={{ alignSelf: 'flex-start' }}>
-              Remove Image
-            </Button>
-          )}
-          <FormRow>
-            <FormLabel>Tile Text:</FormLabel>
-            <TextField
-              type="text"
-              placeholder="Enter tile text..."
-              value={text}
-              onChange={e => setText(e.target.value)}
-              maxLength={100}
-            />
-          </FormRow>
-          <FormRow>
-            <FormLabel>Background Color:</FormLabel>
-            <ColorPreview color={color} onClick={() => setShowColorPicker(v => !v)} title="Pick color" />
-            {showColorPicker && (
-              <div style={{ position: 'absolute', zIndex: 2000, left: 170 }}>
-                <SketchPicker color={color} onChange={c => setColor(c.hex)} />
-              </div>
+          <FormSection>
+            {!imageFile && (
+              <DropZone
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                onClick={() => fileInputRef.current && fileInputRef.current.click()}
+                tabIndex={0}
+                role="button"
+                aria-label="Add image"
+              >
+                Drag & drop an image here, or click to select
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  onChange={handleFileChange}
+                />
+              </DropZone>
             )}
-          </FormRow>
-
-          <Label>Preview:</Label>
-          <HexPreview>
-            <HexPreviewContent>
-              <HexPreviewInterior color={color} />
-              <HexPreviewImageContainer>
-                {isCropping && liveCropImage && <PreviewImage src={liveCropImage} alt="Tile" />}
-                {isCropping && !liveCropImage && imageURL && <PreviewImage src={imageURL} alt="Tile" />}
-                {!isCropping && croppedImage && <PreviewImage src={croppedImage} alt="Tile" />}
-                {!isCropping && !croppedImage && imageURL && <PreviewImage src={imageURL} alt="Tile" style={{ opacity: imageURL ? 1 : 0 }} />}
-              </HexPreviewImageContainer>
-              {text && <PreviewText color={color}>{text}</PreviewText>}
-            </HexPreviewContent>
-          </HexPreview>
+            {/* Cropper UI */}
+            {isCropping && imageURL && (
+              <CropperWrapper>
+                <Cropper
+                  ref={cropperRef}
+                  src={imageURL}
+                  crossOrigin="anonymous"
+                  aspectRatio={1}
+                  viewMode={1}
+                  guides={true}
+                  autoCropArea={1}
+                  background={false}
+                  responsive={true}
+                  dragMode="move"
+                  cropBoxResizable={true}
+                  cropBoxMovable={true}
+                  style={{ width: '100%', height: 220 }}
+                />
+                <Controls>
+                  <CropperActionButton type="button" onClick={() => handleRotate('left')} title="Rotate Left">↺</CropperActionButton>
+                  <CropperActionButton type="button" onClick={() => handleRotate('right')} title="Rotate Right">↻</CropperActionButton>
+                  <CropperActionButton type="button" onClick={() => handleZoom('in')} title="Zoom In">+</CropperActionButton>
+                  <CropperActionButton type="button" onClick={() => handleZoom('out')} title="Zoom Out">-</CropperActionButton>
+                  <CropperActionButton type="button" className="danger" onClick={handleRemoveImage}>Remove</CropperActionButton>
+                </Controls>
+                {error && (
+                  <Error style={{marginTop: '10px'}}>{error}</Error>
+                )}
+              </CropperWrapper>
+            )}
+            {/* Remove image button after crop */}
+            {croppedImage && (
+              <Button type="button" className="secondary" onClick={handleRemoveImage} style={{ alignSelf: 'flex-start', marginTop: '10px' }}>
+                Remove Image
+              </Button>
+            )}
+          </FormSection>
+          <FormSection>
+            <FormRow>
+              <FormLabel>Tile Text:</FormLabel>
+              <TextField
+                type="text"
+                placeholder="Enter tile text..."
+                value={text}
+                onChange={e => setText(e.target.value)}
+                maxLength={100}
+              />
+            </FormRow>
+            <FormRow>
+              <FormLabel>Background Color:</FormLabel>
+              <ColorPreview color={color} onClick={() => setShowColorPicker(v => !v)} title="Pick color" />
+              {showColorPicker && (
+                <div style={{ position: 'absolute', zIndex: 2000, left: 170 }}>
+                  <SketchPicker color={color} onChange={c => setColor(c.hex)} />
+                </div>
+              )}
+            </FormRow>
+          </FormSection>
+          <PreviewSection>
+            <HexPreview>
+              <HexPreviewContent>
+                <HexPreviewInterior color={color} />
+                <HexPreviewImageContainer>
+                  {isCropping && liveCropImage && <PreviewImage src={liveCropImage} alt="Tile" />}
+                  {isCropping && !liveCropImage && imageURL && <PreviewImage src={imageURL} alt="Tile" />}
+                  {!isCropping && croppedImage && <PreviewImage src={croppedImage} alt="Tile" />}
+                  {!isCropping && !croppedImage && imageURL && <PreviewImage src={imageURL} alt="Tile" style={{ opacity: imageURL ? 1 : 0 }} />}
+                </HexPreviewImageContainer>
+                {text && <PreviewText color={color}>{text}</PreviewText>}
+              </HexPreviewContent>
+            </HexPreview>
+          </PreviewSection>
           <ButtonGroup>
             <Button type="button" className="secondary" onClick={handleCancel}>
               Cancel
