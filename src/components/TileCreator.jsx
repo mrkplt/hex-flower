@@ -313,6 +313,7 @@ const TileCreator = ({ isOpen, onClose, onSave }) => {
   const fileInputRef = useRef();
   const cropperRef = useRef(null);
   const modalRef = useRef(null);
+  const colorPickerRef = useRef(null);
 
   useEffect(() => {
     if (imageFile) {
@@ -462,6 +463,21 @@ const TileCreator = ({ isOpen, onClose, onSave }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, [updatePickerPosition, showColorPicker]);
 
+  useEffect(() => {
+    // Handle clicks outside the color picker
+    const handleClickOutside = (event) => {
+      if (showColorPicker && 
+          colorPickerRef.current && 
+          !colorPickerRef.current.contains(event.target) && 
+          event.target.className !== 'color-preview') {
+        setShowColorPicker(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showColorPicker]);
+
   if (!isOpen) return null;
 
   return (
@@ -536,11 +552,15 @@ const TileCreator = ({ isOpen, onClose, onSave }) => {
               />
             </FormRow>
             <FormRow>
-              <ColorPreview color={color} onClick={() => setShowColorPicker(v => !v)} title="Pick color">
+              <ColorPreview 
+                className="color-preview" 
+                color={color} 
+                onClick={() => setShowColorPicker(v => !v)} 
+                title="Pick color">
                 Background Color
               </ColorPreview>
               {showColorPicker && modalRef.current && (
-                <div style={{ 
+                <div ref={colorPickerRef} style={{ 
                   position: 'fixed',
                   zIndex: 2000, 
                   left: `${pickerPosition.left}px`,
