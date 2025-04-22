@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
 const Modal = styled.div`
@@ -65,6 +65,23 @@ const Button = styled.button`
 
 const LayoutConfirmation = ({ isOpen, onClose, onConfirm, layoutSize }) => {
   if (!isOpen) return null;
+  
+  // Add escape key handler to close the confirmation dialog
+  useEffect(() => {
+    const handleEscKey = (event) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+    
+    // Add the event listener when the dialog is open
+    window.addEventListener('keyup', handleEscKey);
+    
+    // Remove the event listener when the dialog is closed
+    return () => {
+      window.removeEventListener('keyup', handleEscKey);
+    };
+  }, [onClose]);
 
   return (
     <Modal>
