@@ -1,9 +1,13 @@
-# Hex Flower App
+# Hex Flower
 
 A React-based application for creating and managing Hex Flowers, inspired by the [Hex Flower Power concept](https://goblinshenchman.wordpress.com/hex-power-flower/). This tool allows users to build hex flowers with a drag-and-drop interface. This entire application was developed by myself and Cascade in Windsurf as an exercise in learning how to talk with agentic AI. The code is not production ready for whatever definition of production you may use.
 
 ## Helpful Links:
 [https://game-icons.net/](https://game-icons.net/)
+
+
+## New
+- Updated tile creation flow!
 
 ## Features
 - Customizable tiles
@@ -47,4 +51,3 @@ Open an issue. Send a PR.
 
 ## Known Issues
   - "Safe Clearing" line breaks in Hex but not in library
-  - The flow for creating a tile is a little clunky. It would be nice if you uploaded an image you could choose the color after to get a preview on the resize.
