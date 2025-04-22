@@ -327,7 +327,7 @@ const DraggableTile = ({ tile, onTileDelete }) => {
   });
 
   return (
-    <Tile ref={drag} isDragging={isDragging}>
+    <Tile ref={drag} $isDragging={isDragging}>
       <TileContent>
         <Interior style={{ backgroundColor: tile.color }}>
           {tile.image && (

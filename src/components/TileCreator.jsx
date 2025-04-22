@@ -249,12 +249,14 @@ const TileCreator = ({ isOpen, onClose, onSave }) => {
 
   useEffect(() => {
     if (imageFile) {
-      const url = URL.createObjectURL(imageFile);
-      setImageURL(url);
-      setIsCropping(true);
-      setCroppedImage(null);
-      setLiveCropImage(null);
-      return () => URL.revokeObjectURL(url);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImageURL(e.target.result);
+        setIsCropping(true);
+        setCroppedImage(null);
+        setLiveCropImage(null);
+      };
+      reader.readAsDataURL(imageFile);
     }
   }, [imageFile]);
 
@@ -403,6 +405,7 @@ const TileCreator = ({ isOpen, onClose, onSave }) => {
               <Cropper
                 ref={cropperRef}
                 src={imageURL}
+                crossOrigin="anonymous"
                 aspectRatio={1}
                 viewMode={1}
                 guides={true}
