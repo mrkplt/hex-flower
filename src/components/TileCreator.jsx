@@ -298,7 +298,17 @@ const TileCreator = ({ isOpen, onClose, onSave }) => {
   // Save/cancel
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave({ text, color, image: croppedImage || null });
+    let imageData = null;
+    // If cropping is enabled and cropper is present, get the cropped image at save time
+    if (imageURL && cropperRef.current?.cropper) {
+      const canvas = cropperRef.current.cropper.getCroppedCanvas();
+      if (canvas) {
+        imageData = canvas.toDataURL('image/png');
+      }
+    } else if (croppedImage) {
+      imageData = croppedImage;
+    }
+    onSave({ text, color, image: imageData });
     setText('');
     setColor('#ffffff');
     handleRemoveImage();
