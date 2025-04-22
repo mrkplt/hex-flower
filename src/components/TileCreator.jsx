@@ -36,15 +36,6 @@ const Form = styled.form`
   flex-direction: column;
   gap: 12px;
 `;
-const Label = styled.label`
-  font-weight: 500;
-  margin-bottom: 4px;
-`;
-const ColorRow = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 16px;
-`;
 const ColorPreview = styled.div`
   display: flex;
   align-items: center;
@@ -196,6 +187,11 @@ const TextField = styled.input`
   min-height: 40px;
   font-size: 1rem;
   width: 100%;
+  
+  &::placeholder {
+    font-weight: 500;
+    color: #666;
+  }
 `;
 const ButtonGroup = styled.div`
   display: flex;
@@ -239,17 +235,13 @@ const FormRow = styled.div`
     margin-bottom: 0;
   }
 `;
-const FormLabel = styled(Label)`
-  min-width: 120px;
-  margin-bottom: 0;
-`;
 const CropperActionButton = styled.button`
   min-width: 36px;
   height: 32px;
   padding: 8px 18px;
   border: none;
   border-radius: 4px;
-  background: #f5f5f5;
+  background: #e0e0e0;
   color: #333;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -282,10 +274,10 @@ const CropperActionButton = styled.button`
 
 const FormSection = styled.div`
   margin-bottom: 10px;
-  background: #f9f9f9;
+  background: #f0f0f0;
   padding: 12px;
   border-radius: 8px;
-  border: 1px solid #eee;
+  border: 1px solid #e0e0e0;
   
   > *:last-child {
     margin-bottom: 0;
@@ -298,9 +290,9 @@ const PreviewSection = styled.div`
   align-items: center;
   margin: 0px;
   padding: 12px;
-  background: #f9f9f9;
+  background: #f0f0f0;
   border-radius: 8px;
-  border: 1px solid #eee;
+  border: 1px solid #e0e0e0;
   
   > *:last-child {
     margin-bottom: 0;
@@ -511,10 +503,9 @@ const TileCreator = ({ isOpen, onClose, onSave }) => {
           </FormSection>
           <FormSection>
             <FormRow>
-              <FormLabel>Tile Text:</FormLabel>
               <TextField
                 type="text"
-                placeholder="Enter tile text..."
+                placeholder="Enter Tile Text..."
                 value={text}
                 onChange={e => setText(e.target.value)}
                 maxLength={100}
