@@ -3,8 +3,11 @@ import styled from 'styled-components';
 import Cropper from 'react-cropper';
 import '../styles/cropper.css';
 import { SketchPicker } from 'react-color';
+import { getHexDimensions } from '../constants/hexLayout';
 
 const HEX_CLIP_PATH = 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)';
+
+const { width: HEX_WIDTH, height: HEX_HEIGHT, margin: HEX_MARGIN } = getHexDimensions();
 
 const Modal = styled.div`
   position: fixed;
@@ -48,45 +51,87 @@ const ColorPreview = styled.div`
   background: ${props => props.color};
 `;
 const HexPreview = styled.div`
-  width: 220px;
-  height: 190px;
-  margin: 0 auto 12px auto;
-  background: ${props => props.color};
-  clip-path: ${HEX_CLIP_PATH};
+  width: ${HEX_WIDTH}px;
+  height: ${HEX_HEIGHT}px;
   position: relative;
+  margin: 0 auto 12px auto;
+  padding: 0px;
+  background: black;
+  overflow: hidden;
+  clip-path: ${HEX_CLIP_PATH};
+`;
+const HexPreviewContent = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  clip-path: ${HEX_CLIP_PATH};
 `;
-const PreviewImage = styled.img`
+const HexPreviewInterior = styled.div`
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  pointer-events: none;
   position: absolute;
-  top: 0; left: 0;
+  top: 1px;
+  left: 1px;
+  height: calc(100% - 2px);
+  width: calc(100% - 2px);
+  background-color: ${props => props.color};
+  clip-path: ${HEX_CLIP_PATH};
+  overflow: hidden;
+`;
+const HexPreviewImageContainer = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 1px;
+  left: 1px;
+  height: calc(100% - 2px);
+  width: calc(100% - 2px);
+  clip-path: ${HEX_CLIP_PATH};
+  overflow: hidden;
+`;
+const PreviewImage = styled.img`
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: cover;
+  object-position: center;
 `;
 const PreviewText = styled.div`
-  position: absolute;
-  width: 90%;
-  left: 5%;
-  top: 50%;
-  transform: translateY(-50%);
-  color: ${props => {
-    // Contrast: white for dark bg, black for light bg
-    if (!props.bg) return '#222';
-    const c = props.bg.replace('#','');
-    const r = parseInt(c.substring(0,2),16), g = parseInt(c.substring(2,4),16), b = parseInt(c.substring(4,6),16);
-    return (0.299*r + 0.587*g + 0.114*b) > 186 ? '#222' : '#fff';
-  }};
-  font-size: 1.15rem;
-  font-weight: 600;
+  font-size: 16px;
   text-align: center;
-  word-break: break-word;
+  word-wrap: break-word;
+  max-width: 80%;
   z-index: 2;
-  pointer-events: none;
+  padding: 2px 6px;
+  border-radius: 4px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${props => {
+    // Convert hex color to RGB
+    if (!props.color) return '#222';
+    const r = parseInt(props.color.slice(1, 3), 16);
+    const g = parseInt(props.color.slice(3, 5), 16);
+    const b = parseInt(props.color.slice(5, 7), 16);
+    
+    // Calculate luminance
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    
+    // Return white text for dark colors, black text for light colors
+    return luminance > 0.5 ? '#000000' : '#ffffff';
+  }};
 `;
 const DropZone = styled.div`
   border: 2px dashed #bbb;
@@ -407,12 +452,17 @@ const TileCreator = ({ isOpen, onClose, onSave }) => {
           </FormRow>
 
           <Label>Preview:</Label>
-          <HexPreview color={color}>
-            {isCropping && liveCropImage && <PreviewImage src={liveCropImage} alt="Tile" />}
-            {isCropping && !liveCropImage && imageURL && <PreviewImage src={imageURL} alt="Tile" />}
-            {!isCropping && croppedImage && <PreviewImage src={croppedImage} alt="Tile" />}
-            {!isCropping && !croppedImage && imageURL && <PreviewImage src={imageURL} alt="Tile" style={{ opacity: imageURL ? 1 : 0 }} />}
-            {text && <PreviewText bg={color}>{text}</PreviewText>}
+          <HexPreview>
+            <HexPreviewContent>
+              <HexPreviewInterior color={color} />
+              <HexPreviewImageContainer>
+                {isCropping && liveCropImage && <PreviewImage src={liveCropImage} alt="Tile" />}
+                {isCropping && !liveCropImage && imageURL && <PreviewImage src={imageURL} alt="Tile" />}
+                {!isCropping && croppedImage && <PreviewImage src={croppedImage} alt="Tile" />}
+                {!isCropping && !croppedImage && imageURL && <PreviewImage src={imageURL} alt="Tile" style={{ opacity: imageURL ? 1 : 0 }} />}
+              </HexPreviewImageContainer>
+              {text && <PreviewText color={color}>{text}</PreviewText>}
+            </HexPreviewContent>
           </HexPreview>
           <ButtonGroup>
             <Button type="button" className="secondary" onClick={handleCancel}>
