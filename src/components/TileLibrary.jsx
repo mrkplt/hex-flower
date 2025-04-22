@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useDrag } from 'react-dnd';
 import { ItemTypes } from '../constants';
 import { getHexDimensions } from '../constants/hexLayout';
-import ImageEditor from './ImageEditor';
+import TileCreator from './TileCreator';
 import { SketchPicker } from 'react-color';
 
 const { width, height } = getHexDimensions();
@@ -342,158 +342,30 @@ const DraggableTile = ({ tile, onTileDelete }) => {
   );
 };
 
-const CreateTileDialog = ({ onClose }) => {
-  const [text, setText] = React.useState('');
-  const [color, setColor] = React.useState('#ffffff');
-  const [showColorPicker, setShowColorPicker] = React.useState(false);
-  const [tempColor, setTempColor] = React.useState('#ffffff');
-  const colorPickerRef = React.useRef(null);
-
-  React.useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (colorPickerRef.current && !colorPickerRef.current.contains(event.target)) {
-        setShowColorPicker(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  const handleChooseImage = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*';
-    input.onchange = (e) => {
-      if (e.target.files && e.target.files[0]) {
-        onClose({
-          type: 'image',
-          file: e.target.files[0],
-          text,
-          color
-        });
-      }
-    };
-    input.click();
-  };
-
-  const handleSave = () => {
-    if (text.trim()) {
-      onClose({
-        type: 'text',
-        text,
-        color
-      });
-    }
-  };
-
-  const handleColorConfirm = () => {
-    setColor(tempColor);
-    setShowColorPicker(false);
-  };
-
-  return (
-    <Dialog>
-      <DialogTitle>Create New Tile</DialogTitle>
-      <DialogContent>
-        <TextForm>
-          <Label>Tile Text:</Label>
-          <Input
-            type="text"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder="Enter tile text"
-          />
-        </TextForm>
-
-        <ColorForm>
-          <ColorButton
-            style={{ backgroundColor: color }}
-            onClick={() => setShowColorPicker(true)}
-          >
-            {showColorPicker ? '✓' : 'Background Color'}
-          </ColorButton>
-          {showColorPicker && (
-            <ColorPickerWrapper ref={colorPickerRef}>
-              <ColorPickerContainer>
-                <SketchPicker
-                  color={tempColor}
-                  onChange={(color) => setTempColor(color.hex)}
-                />
-              </ColorPickerContainer>
-              <ColorPickerButtonContainer>
-                <ColorPickerButton onClick={() => setShowColorPicker(false)}>Cancel</ColorPickerButton>
-                <ColorPickerButton className="primary" onClick={handleColorConfirm}>Confirm</ColorPickerButton>
-              </ColorPickerButtonContainer>
-            </ColorPickerWrapper>
-          )}
-        </ColorForm>
-
-        <ButtonGroup>
-          <Button className="primary" onClick={handleChooseImage}>Choose Image</Button>
-          <Button className="secondary" onClick={() => onClose(null)}>Cancel</Button>
-          <Button className="primary" onClick={handleSave}>Save</Button>
-        </ButtonGroup>
-      </DialogContent>
-    </Dialog>
-  );
-};
-
 const TileLibrary = ({ tiles, onCreateClick, onTileDelete }) => {
-  const [showDialog, setShowDialog] = React.useState(false);
-  const [showEditor, setShowEditor] = React.useState(false);
-  const [imageFile, setImageFile] = React.useState(null);
-  const [tileData, setTileData] = React.useState(null);
+  const [showTileCreator, setShowTileCreator] = React.useState(false);
 
-  const handleCreateTile = (data) => {
-    if (data) {
-      if (data.type === 'image') {
-        setImageFile(data.file);
-        setShowEditor(true);
-        setTileData(data);
-      } else {
-        const newTile = {
-          id: crypto.randomUUID(),
-          text: data.text,
-          color: data.color
-        };
-        onCreateClick(newTile);
-      }
-    }
-    setShowDialog(false);
+  const handleSaveTile = (tileData) => {
+    const newTile = {
+      id: crypto.randomUUID(),
+      ...tileData
+    };
+    onCreateClick(newTile);
+    setShowTileCreator(false);
   };
 
-  const handleEditorSave = (editedImage) => {
-    if (tileData) {
-      const newTile = {
-        id: crypto.randomUUID(),
-        image: editedImage,
-        text: tileData.text,
-        color: tileData.color
-      };
-      onCreateClick(newTile);
-    }
-    setShowEditor(false);
-  };
-
-  const handleEditorCancel = () => {
-    setImageFile(null);
-    setShowEditor(false);
+  const handleCancelTile = () => {
+    setShowTileCreator(false);
   };
 
   return (
     <LibraryContainer>
-      <CreateButton onClick={() => setShowDialog(true)}>➕</CreateButton>
-      {showDialog && (
-        <CreateTileDialog onClose={handleCreateTile} />
-      )}
-      {showEditor && (
-        <ImageEditor
-          image={imageFile}
-          onSave={handleEditorSave}
-          onCancel={handleEditorCancel}
+      <CreateButton onClick={() => setShowTileCreator(true)}>➕</CreateButton>
+      {showTileCreator && (
+        <TileCreator
+          isOpen={showTileCreator}
+          onClose={handleCancelTile}
+          onSave={handleSaveTile}
         />
       )}
       <TileContainer>
