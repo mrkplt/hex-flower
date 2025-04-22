@@ -48,6 +48,3 @@ npm run preview
 
 ## Contributing
 Open an issue. Send a PR.
-
-## Known Issues
-  - "Safe Clearing" line breaks in Hex but not in library
