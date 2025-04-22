@@ -46,11 +46,35 @@ const ColorRow = styled.div`
   gap: 16px;
 `;
 const ColorPreview = styled.div`
-  width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
   height: 36px;
-  border-radius: 8px;
+  border-radius: 4px;
   border: 1px solid #ccc;
   background: ${props => props.color};
+  padding: 8px 12px;
+  cursor: pointer;
+  position: relative;
+  color: ${props => {
+    // Calculate contrast color for text
+    const r = parseInt(props.color.slice(1, 3), 16);
+    const g = parseInt(props.color.slice(3, 5), 16);
+    const b = parseInt(props.color.slice(5, 7), 16);
+    
+    // Calculate luminance
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    
+    // Return white text for dark colors, black text for light colors
+    return luminance > 0.5 ? '#000000' : '#ffffff';
+  }};
+  text-align: center;
+  font-weight: 500;
+  
+  &:hover {
+    border-color: #4CAF50;
+  }
 `;
 const HexPreview = styled.div`
   width: ${HEX_WIDTH}px;
@@ -497,8 +521,9 @@ const TileCreator = ({ isOpen, onClose, onSave }) => {
               />
             </FormRow>
             <FormRow>
-              <FormLabel>Background Color:</FormLabel>
-              <ColorPreview color={color} onClick={() => setShowColorPicker(v => !v)} title="Pick color" />
+              <ColorPreview color={color} onClick={() => setShowColorPicker(v => !v)} title="Pick color">
+                Background Color
+              </ColorPreview>
               {showColorPicker && (
                 <div style={{ position: 'absolute', zIndex: 2000, left: 170 }}>
                   <SketchPicker color={color} onChange={c => setColor(c.hex)} />
