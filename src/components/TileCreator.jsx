@@ -271,15 +271,6 @@ const TileCreator = ({ isOpen, onClose, onSave }) => {
   };
 
   // Cropper controls
-  const handleCrop = () => {
-    if (liveCropImage) {
-      setCroppedImage(liveCropImage);
-      setIsCropping(false);
-      setError(null);
-    } else {
-      setError('Failed to crop image.');
-    }
-  };
   const handleRotate = (dir) => {
     if (cropperRef.current?.cropper) cropperRef.current?.cropper.rotate(dir === 'left' ? -90 : 90);
   };
@@ -372,7 +363,6 @@ const TileCreator = ({ isOpen, onClose, onSave }) => {
                 <CropperActionButton type="button" onClick={() => handleRotate('right')} title="Rotate Right">&#x21B7;</CropperActionButton>
                 <CropperActionButton type="button" onClick={() => handleZoom('in')} title="Zoom In">&#x2B05;</CropperActionButton>
                 <CropperActionButton type="button" onClick={() => handleZoom('out')} title="Zoom Out">&#x27A1;</CropperActionButton>
-                <CropperActionButton type="button" className="primary" onClick={handleCrop}>Crop</CropperActionButton>
                 <CropperActionButton type="button" onClick={handleRemoveImage}>Remove Image</CropperActionButton>
               </Controls>
               {error && <Error>{error}</Error>}
