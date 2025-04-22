@@ -444,9 +444,16 @@ const TileCreator = ({ isOpen, onClose, onSave }) => {
   const updatePickerPosition = useCallback(() => {
     if (modalRef.current && showColorPicker) {
       const modalRect = modalRef.current.getBoundingClientRect();
+      
+      // The SketchPicker's approximate height when scaled by 1.25
+      const pickerHeight = 365; // base height ~280px * 1.25 scale
+      
+      // Calculate top position to align bottoms
+      const topPosition = modalRect.bottom - pickerHeight;
+      
       setPickerPosition({
         left: modalRect.right + 20,
-        top: modalRect.top * 1.5
+        top: Math.max(topPosition, modalRect.top) // Prevent it from going above the modal
       });
     }
   }, [showColorPicker]);
