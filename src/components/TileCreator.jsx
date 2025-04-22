@@ -445,8 +445,8 @@ const TileCreator = ({ isOpen, onClose, onSave }) => {
     if (modalRef.current && showColorPicker) {
       const modalRect = modalRef.current.getBoundingClientRect();
       setPickerPosition({
-        left: modalRect.right + 10,
-        top: modalRect.top + 100
+        left: modalRect.right + 20,
+        top: modalRect.top * 1.5
       });
     }
   }, [showColorPicker]);
@@ -571,7 +571,9 @@ const TileCreator = ({ isOpen, onClose, onSave }) => {
                   position: 'fixed',
                   zIndex: 2000, 
                   left: `${pickerPosition.left}px`,
-                  top: `${pickerPosition.top}px`
+                  top: `${pickerPosition.top}px`,
+                  transform: 'scale(1.25)',
+                  transformOrigin: 'top left'
                 }}>
                   <SketchPicker 
                     color={color} 
