@@ -309,8 +309,10 @@ const TileCreator = ({ isOpen, onClose, onSave }) => {
   const [liveCropImage, setLiveCropImage] = useState(null);
   const [isCropping, setIsCropping] = useState(false);
   const [error, setError] = useState(null);
+  const [pickerPosition, setPickerPosition] = useState({ left: 0, top: 0 });
   const fileInputRef = useRef();
   const cropperRef = useRef(null);
+  const modalRef = useRef(null);
 
   useEffect(() => {
     if (imageFile) {
@@ -438,11 +440,33 @@ const TileCreator = ({ isOpen, onClose, onSave }) => {
     return () => window.removeEventListener('keyup', handleEsc);
   }, [isOpen]);
 
+  const updatePickerPosition = useCallback(() => {
+    if (modalRef.current && showColorPicker) {
+      const modalRect = modalRef.current.getBoundingClientRect();
+      setPickerPosition({
+        left: modalRect.right + 10,
+        top: modalRect.top + 100
+      });
+    }
+  }, [showColorPicker]);
+
+  useEffect(() => {
+    updatePickerPosition();
+    
+    // Handle window resize to update picker position
+    const handleResize = () => {
+      updatePickerPosition();
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [updatePickerPosition, showColorPicker]);
+
   if (!isOpen) return null;
 
   return (
     <Modal>
-      <ModalContent onClick={e => e.stopPropagation()}>
+      <ModalContent ref={modalRef} onClick={e => e.stopPropagation()}>
         <Form onSubmit={handleSubmit}>
           <FormSection>
             {!imageFile && (
@@ -515,8 +539,13 @@ const TileCreator = ({ isOpen, onClose, onSave }) => {
               <ColorPreview color={color} onClick={() => setShowColorPicker(v => !v)} title="Pick color">
                 Background Color
               </ColorPreview>
-              {showColorPicker && (
-                <div style={{ position: 'absolute', zIndex: 2000, left: 170 }}>
+              {showColorPicker && modalRef.current && (
+                <div style={{ 
+                  position: 'fixed',
+                  zIndex: 2000, 
+                  left: `${pickerPosition.left}px`,
+                  top: `${pickerPosition.top}px`
+                }}>
                   <SketchPicker color={color} onChange={c => setColor(c.hex)} />
                 </div>
               )}
