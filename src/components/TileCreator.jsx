@@ -466,10 +466,11 @@ const TileCreator = ({ isOpen, onClose, onSave }) => {
   useEffect(() => {
     // Handle clicks outside the color picker
     const handleClickOutside = (event) => {
+      // If the color picker is showing and the click is outside both the picker and the color button
       if (showColorPicker && 
           colorPickerRef.current && 
           !colorPickerRef.current.contains(event.target) && 
-          event.target.className !== 'color-preview') {
+          !event.target.closest('.color-preview')) {
         setShowColorPicker(false);
       }
     };
@@ -477,6 +478,12 @@ const TileCreator = ({ isOpen, onClose, onSave }) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [showColorPicker]);
+
+  // Function to handle color button click
+  const handleColorButtonClick = (e) => {
+    e.stopPropagation(); // Prevent event from bubbling up
+    setShowColorPicker(prevState => !prevState);
+  };
 
   if (!isOpen) return null;
 
@@ -555,7 +562,7 @@ const TileCreator = ({ isOpen, onClose, onSave }) => {
               <ColorPreview 
                 className="color-preview" 
                 color={color} 
-                onClick={() => setShowColorPicker(v => !v)} 
+                onClick={handleColorButtonClick} 
                 title="Pick color">
                 Background Color
               </ColorPreview>
