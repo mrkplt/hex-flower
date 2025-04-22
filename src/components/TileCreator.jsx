@@ -566,7 +566,11 @@ const TileCreator = ({ isOpen, onClose, onSave }) => {
                   left: `${pickerPosition.left}px`,
                   top: `${pickerPosition.top}px`
                 }}>
-                  <SketchPicker color={color} onChange={c => setColor(c.hex)} />
+                  <SketchPicker 
+                    color={color} 
+                    onChange={c => setColor(c.hex)}
+                    disableAlpha={true}
+                  />
                 </div>
               )}
             </FormRow>
