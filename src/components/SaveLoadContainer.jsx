@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { toPng, toSvg } from 'html-to-image';
 import { jsPDF } from 'jspdf';
+import { BLUEBERRY, SAPPHIRE, GREEN, MANTIS, WHITE } from '../constants/colors';
 
 const Container = styled.div`
   display: flex;
@@ -17,20 +18,20 @@ const SaveLoadButton = styled.button`
   padding: 8px;
   border: none;
   border-radius: 4px;
-  background: #4285F4;
-  color: white;
+  background: ${BLUEBERRY};
+  color: ${WHITE};
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: center;
   font-size: 14px;
 
   &:hover {
-    background: #357ABE;
+    background: ${SAPPHIRE};
   }
 
   &:focus,
   &:focus-visible {
-    outline: 2px solid #357ABE;
+    outline: 2px solid ${SAPPHIRE};
     outline-offset: 2px;
   }
 `;
@@ -46,8 +47,8 @@ const InfoButton = styled.a`
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #4CAF50;
-  color: white;
+  background: ${GREEN};
+  color: ${WHITE};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -57,7 +58,7 @@ const InfoButton = styled.a`
   transition: all 0.2s ease;
 
   &:hover {
-    background: #6c6;
+    background: ${MANTIS};
     transform: scale(1.1);
   }
 `;

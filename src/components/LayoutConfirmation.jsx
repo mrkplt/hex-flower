@@ -1,5 +1,9 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import { 
+  GREEN, FERN, CULTURED, GAINSBORO, COSMONAUT,
+  WHITE, DARK_CHARCOAL, LEAD_GREY, BLACK_50_ALPHA 
+} from '../constants/colors';
 
 const Modal = styled.div`
   position: fixed;
@@ -7,7 +11,7 @@ const Modal = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: ${BLACK_50_ALPHA};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,7 +19,7 @@ const Modal = styled.div`
 `;
 
 const ModalContent = styled.div`
-  background: white;
+  background: ${WHITE};
   padding: 20px;
   border-radius: 8px;
   width: 400px;
@@ -24,12 +28,12 @@ const ModalContent = styled.div`
 
 const Title = styled.h2`
   margin: 0 0 15px 0;
-  color: #333;
+  color: ${DARK_CHARCOAL};
 `;
 
 const Message = styled.p`
   margin: 0 0 20px 0;
-  color: #666;
+  color: ${LEAD_GREY};
 `;
 
 const ButtonGroup = styled.div`
@@ -45,20 +49,20 @@ const Button = styled.button`
   cursor: pointer;
   
   &:primary {
-    background: #4CAF50;
-    color: white;
+    background: ${GREEN};
+    color: ${WHITE};
     
     &:hover {
-      background: #45a049;
+      background: ${FERN};
     }
   }
   
   &:secondary {
-    background: #f5f5f5;
-    border: 1px solid #ddd;
+    background: ${GAINSBORO};
+    border: 1px solid ${COSMONAUT};
     
     &:hover {
-      background: #e0e0e0;
+      background: ${CULTURED};
     }
   }
 `;

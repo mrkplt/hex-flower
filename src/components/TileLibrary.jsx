@@ -4,6 +4,10 @@ import { useDrag } from 'react-dnd';
 import { ItemTypes } from '../constants';
 import { getHexDimensions } from '../constants/hexLayout';
 import TileCreator from './TileCreator';
+import { 
+  CULTURED, COSMONAUT, BLACK, WHITE, 
+  GREEN, MANTIS, getContrastText 
+} from '../constants/colors';
 import { SketchPicker } from 'react-color';
 
 const { width, height } = getHexDimensions();
@@ -11,9 +15,9 @@ const { width, height } = getHexDimensions();
 const LibraryContainer = styled.div`
   width: 350px;
   height: 100%;
-  background: #f5f5f5;
+  background: ${CULTURED};
   padding: 20px;
-  border-right: 1px solid #ddd;
+  border-right: 1px solid ${COSMONAUT};
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -45,7 +49,7 @@ const Tile = styled.div`
 
 const TileContent = styled.div`
   height: 100%;
-  background: black;
+  background: ${BLACK};
 `;
 
 const Interior = styled.div`
@@ -88,18 +92,7 @@ const TileText = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: ${props => {
-    // Convert hex color to RGB
-    const r = parseInt(props.color.slice(1, 3), 16);
-    const g = parseInt(props.color.slice(3, 5), 16);
-    const b = parseInt(props.color.slice(5, 7), 16);
-    
-    // Calculate luminance
-    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-    
-    // Return white text for dark colors, black text for light colors
-    return luminance > 0.5 ? '#000000' : '#ffffff';
-  }};
+  color: ${props => getContrastText(props.color)};
   text-align: center;
   width: 80%;
   max-width: 100%;
@@ -123,7 +116,7 @@ const CreateButton = styled.button`
     left: 0;
     width: 100%;
     height: 100%;
-    background: #4CAF50;
+    background: ${GREEN};
     clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
     transition: all 0.2s ease;
   }
@@ -135,12 +128,12 @@ const CreateButton = styled.button`
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 40px;
-    color: white;
+    color: ${WHITE};
     z-index: 1;
   }
 
   &:hover:before {
-    background: #6c6
+    background: ${MANTIS};
   }
 `;
 
