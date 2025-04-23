@@ -4,6 +4,7 @@ import Hex from './Hex';
 import TrashZone from './TrashZone';
 import { getFlowerLayout, getHexDimensions } from '../constants/hexLayout';
 import LayoutConfirmation from './LayoutConfirmation';
+import { GREEN, SNOW, GAINSBORO, WHITE, DARK_CHARCOAL } from '../constants/colors';
 
 const FlowerContainer = styled.div`
   display: flex;
@@ -30,15 +31,15 @@ const LayoutToggle = styled.button`
   padding: 8px;
   border: none;
   border-radius: 4px;
-  background: ${props => props.$isActive ? '#4CAF50' : '#f0f0f0'};
-  color: ${props => props.$isActive ? 'white' : '#333'};
+  background: ${props => props.$isActive ? GREEN : SNOW};
+  color: ${props => props.$isActive ? WHITE : DARK_CHARCOAL};
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: center;
   font-size: 14px;
 
   &:hover {
-    background: ${props => props.$isActive ? '#4CAF50' : '#e0e0e0'};
+    background: ${props => props.$isActive ? GREEN : GAINSBORO};
   }
 `;
 

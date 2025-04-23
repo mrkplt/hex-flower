@@ -4,6 +4,13 @@ import Cropper from 'react-cropper';
 import '../styles/cropper.css';
 import { SketchPicker } from 'react-color';
 import { getHexDimensions } from '../constants/hexLayout';
+import { 
+  BLACK, BLACK_50_ALPHA, WHITE, ROSE_WATER,
+  GREEN, FERN, CINNABAR, VIVALDI, 
+  LIGHT_CHARCOAL, DARK_CHARCOAL, LEAD_GREY, CORDOVAN,
+  GAINSBORO, COSMONAUT, CHINESE_SILVER, LOTION, CULTURED, SNOW,
+  BLACK_20_ALPHA, getContrastText
+} from '../constants/colors';
 
 const HEX_CLIP_PATH = 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)';
 
@@ -15,19 +22,19 @@ const Modal = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: ${BLACK_50_ALPHA};
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
 `;
 const ModalContent = styled.div`
-  background: white;
+  background: ${WHITE};
   padding: 28px 24px 24px 24px;
   border-radius: 12px;
   width: 430px;
   max-width: 95vw;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 32px ${BLACK_20_ALPHA};
   max-height: 90vh;
   overflow-y: auto;
 `;
@@ -43,28 +50,17 @@ const ColorPreview = styled.div`
   width: 100%;
   height: 36px;
   border-radius: 4px;
-  border: 1px solid #ccc;
+  border: 1px solid ${CHINESE_SILVER};
   background: ${props => props.color};
   padding: 8px 12px;
   cursor: pointer;
   position: relative;
-  color: ${props => {
-    // Calculate contrast color for text
-    const r = parseInt(props.color.slice(1, 3), 16);
-    const g = parseInt(props.color.slice(3, 5), 16);
-    const b = parseInt(props.color.slice(5, 7), 16);
-    
-    // Calculate luminance
-    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-    
-    // Return white text for dark colors, black text for light colors
-    return luminance > 0.5 ? '#000000' : '#ffffff';
-  }};
+  color: ${props => getContrastText(props.color)};
   text-align: center;
   font-weight: 500;
   
   &:hover {
-    border-color: #4CAF50;
+    border-color: ${GREEN};
   }
 `;
 const HexPreview = styled.div`
@@ -73,7 +69,7 @@ const HexPreview = styled.div`
   position: relative;
   margin: 0 auto 12px auto;
   padding: 0px;
-  background: black;
+  background: ${BLACK};
   overflow: hidden;
   clip-path: ${HEX_CLIP_PATH};
 `;
@@ -137,17 +133,8 @@ const PreviewText = styled.div`
   justify-content: center;
   align-items: center;
   color: ${props => {
-    // Convert hex color to RGB
-    if (!props.color) return '#222';
-    const r = parseInt(props.color.slice(1, 3), 16);
-    const g = parseInt(props.color.slice(3, 5), 16);
-    const b = parseInt(props.color.slice(5, 7), 16);
-    
-    // Calculate luminance
-    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-    
-    // Return white text for dark colors, black text for light colors
-    return luminance > 0.5 ? '#000000' : '#ffffff';
+    if (!props.color) return CORDOVAN;
+    return getContrastText(props.color);
   }};
 `;
 const DropZone = styled.div`
@@ -155,14 +142,14 @@ const DropZone = styled.div`
   border-radius: 8px;
   padding: 14px;
   text-align: center;
-  color: #888;
-  background: #fafbfc;
+  color: ${LIGHT_CHARCOAL};
+  background: ${LOTION};
   cursor: pointer;
   transition: border 0.2s;
   margin-bottom: 5px;
   &:hover {
-    border-color: #4caf50;
-    color: #333;
+    border-color: ${GREEN};
+    color: ${DARK_CHARCOAL};
   }
 `;
 const CropperWrapper = styled.div`
@@ -182,7 +169,7 @@ const Controls = styled.div`
 `;
 const TextField = styled.input`
   padding: 8px;
-  border: 1px solid #ddd;
+  border: 1px solid ${COSMONAUT};
   border-radius: 4px;
   min-height: 40px;
   font-size: 1rem;
@@ -190,7 +177,7 @@ const TextField = styled.input`
   
   &::placeholder {
     font-weight: 500;
-    color: #666;
+    color: ${LEAD_GREY};
   }
 `;
 const ButtonGroup = styled.div`
@@ -206,20 +193,20 @@ const Button = styled.button`
   cursor: pointer;
   font-size: 1rem;
   &.primary {
-    background: #4CAF50;
-    color: white;
-    &:hover { background: #45a049; }
+    background: ${GREEN};
+    color: ${WHITE};
+    &:hover { background: ${FERN}; }
   }
   &.secondary {
-    background: #f5f5f5;
-    border: 1px solid #ddd;
-    &:hover { background: #e5e5e5; }
+    background: ${CULTURED};
+    border: 1px solid ${COSMONAUT};
+    &:hover { background: ${GAINSBORO}; }
   }
 `;
 const Error = styled.div`
-  color: #f44336;
+  color: ${CINNABAR};
   padding: 6px;
-  background: #ffebee;
+  background: ${ROSE_WATER};
   border-radius: 4px;
   margin-top: 6px;
   text-align: center;
@@ -241,43 +228,43 @@ const CropperActionButton = styled.button`
   padding: 8px 18px;
   border: none;
   border-radius: 4px;
-  background: #e0e0e0;
-  color: #333;
+  background: ${GAINSBORO};
+  color: ${DARK_CHARCOAL};
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: center;
   font-size: 0.9rem;
   margin-right: 4px;
-  border: 1px solid #ddd;
+  border: 1px solid ${COSMONAUT};
   display: flex;
   align-items: center;
   justify-content: center;
   
   &:hover {
-    background: #e5e5e5;
+    background: ${CULTURED};
   }
   
   &.primary {
-    background: #4CAF50;
-    color: white;
+    background: ${GREEN};
+    color: ${WHITE};
     border: none;
-    &:hover { background: #45a049; }
+    &:hover { background: ${FERN}; }
   }
   
   &.danger {
-    background: #f44336;
-    color: white;
+    background: ${CINNABAR};
+    color: ${WHITE};
     border: none;
-    &:hover { background: #d32f2f; }
+    &:hover { background: ${VIVALDI}; }
   }
 `;
 
 const FormSection = styled.div`
   margin-bottom: 10px;
-  background: #f0f0f0;
+  background: ${SNOW};
   padding: 12px;
   border-radius: 8px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid ${GAINSBORO};
   
   > *:last-child {
     margin-bottom: 0;
@@ -290,9 +277,9 @@ const PreviewSection = styled.div`
   align-items: center;
   margin: 0px;
   padding: 12px;
-  background: #f0f0f0;
+  background: ${SNOW};
   border-radius: 8px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid ${GAINSBORO};
   
   > *:last-child {
     margin-bottom: 0;

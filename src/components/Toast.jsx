@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { DARK_CHARCOAL, WHITE } from '../constants/colors';
 
 const ToastContainer = styled.div`
   position: fixed;
@@ -16,8 +17,8 @@ const ToastContainer = styled.div`
 `;
 
 const ToastMessage = styled.div`
-  background: #333;
-  color: white;
+  background: ${DARK_CHARCOAL};
+  color: ${WHITE};
   padding: 12px 24px;
   border-radius: 4px;
   font-size: 14px;

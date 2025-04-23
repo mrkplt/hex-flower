@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useDrop } from 'react-dnd';
 import { ItemTypes } from '../constants';
+import { RED, CORAL } from '../constants/colors';
 
 const TrashZoneContainer = styled.div`
   position: fixed;
@@ -19,7 +20,7 @@ const TrashZoneContainer = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
-    background: ${props => props.$isOver ? '#ff0000' : '#FF5555'};
+    background: ${props => props.$isOver ? RED : CORAL};
     clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   }
 
