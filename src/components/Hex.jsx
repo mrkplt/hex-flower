@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useDrag, useDrop } from 'react-dnd';
 import { ItemTypes } from '../constants';
 import { getHexDimensions } from '../constants/hexLayout';
+import { MANTIS, SNOW, BLACK, WHITE, getContrastText } from '../constants/colors';
 
 const { width, height, margin } = getHexDimensions();
 
@@ -14,7 +15,7 @@ const HexContainer = styled.div`
   margin-right: ${margin}px;
   margin-top: 0px;
   margin-bottom: 0px;
-  background: black;
+  background: ${BLACK};
   padding: 0px;
   cursor: ${props => props.$hasTile ? 'grab' : 'pointer'};
   opacity: ${props => props.$isDragging ? 0.5 : 1};
@@ -33,7 +34,7 @@ const HexContainer = styled.div`
     left: ${props => props.$isOver ? 4 : 1}px;
     height: calc(100% - ${props => props.$isOver ? '8px' : '2px'});
     width: calc(100% - ${props => props.$isOver ? '8px' : '2px'});
-    background: ${props => props.$isOver ? '#6c6' : '#f0f0f0'};
+    background: ${props => props.$isOver ? MANTIS : SNOW};
     clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
     transition: all 0.2s ease;
     pointer-events: ${props => props.$isDragging ? 'none' : 'auto'};
@@ -44,7 +45,7 @@ const HexContainer = styled.div`
     left: 4px;
     height: calc(100% - 8px);
     width: calc(100% - 8px);
-    background: #6c6;
+    background: ${MANTIS};
   }
 
   // Ensure the container itself matches the hex shape
@@ -97,18 +98,7 @@ const Label = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  color: ${props => {
-    // Convert hex color to RGB
-    const r = parseInt(props.color.slice(1, 3), 16);
-    const g = parseInt(props.color.slice(3, 5), 16);
-    const b = parseInt(props.color.slice(5, 7), 16);
-    
-    // Calculate luminance
-    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-    
-    // Return white text for dark colors, black text for light colors
-    return luminance > 0.5 ? '#000000' : '#ffffff';
-  }};
+  color: ${props => getContrastText(props.color)};
 `;
 
 const ImageContainer = styled.div`

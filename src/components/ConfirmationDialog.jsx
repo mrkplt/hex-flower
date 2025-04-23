@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { GREEN, FERN, CINNABAR, VIVALDI, WHITE, DARK_CHARCOAL, LEAD_GREY, BLACK_50_ALPHA } from '../constants/colors';
 
 const Dialog = styled.div`
   position: fixed;
@@ -7,7 +8,7 @@ const Dialog = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: ${BLACK_50_ALPHA};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,7 +16,7 @@ const Dialog = styled.div`
 `;
 
 const DialogContent = styled.div`
-  background: white;
+  background: ${WHITE};
   padding: 20px;
   border-radius: 8px;
   width: 80%;
@@ -25,12 +26,12 @@ const DialogContent = styled.div`
 const Title = styled.h2`
   margin: 0 0 20px 0;
   font-size: 24px;
-  color: #333;
+  color: ${DARK_CHARCOAL};
 `;
 
 const Message = styled.p`
   margin: 0 0 20px 0;
-  color: #666;
+  color: ${LEAD_GREY};
 `;
 
 const ButtonGroup = styled.div`
@@ -47,20 +48,20 @@ const Button = styled.button`
   font-size: 16px;
   
   &.cancel {
-    background: #f44336;
-    color: white;
+    background: ${CINNABAR};
+    color: ${WHITE};
     
     &:hover {
-      background: #d32f2f;
+      background: ${VIVALDI};
     }
   }
   
   &.confirm {
-    background: #4CAF50;
-    color: white;
+    background: ${GREEN};
+    color: ${WHITE};
     
     &:hover {
-      background: #45a049;
+      background: ${FERN};
     }
   }
 `;
