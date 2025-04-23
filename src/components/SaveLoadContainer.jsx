@@ -252,6 +252,7 @@ const SaveLoadContainer = ({
         Save
       </SaveLoadButton>
       <FileInput
+        type="file"
         accept="application/json"
         onChange={handleLoad}
       />
